@@ -45,7 +45,7 @@ create table Pedido(
 	data_envio date,
 	status varchar(1) not null,
 	valor_total real not null,
-	id_produto int NOT NULL REFERENCES Produto(id_produto)
+	id_cliente int NOT NULL REFERENCES Cliente(id_cliente)
 );
 
 
