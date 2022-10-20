@@ -3,6 +3,8 @@ package org.serratec.domain;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -52,15 +55,9 @@ public class Pedido {
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 	
-	//@OneToMany(cascade = CascadeType.ALL)
-	//@JoinColumn(name="id_pedido")
-	
 	@JsonIgnore
-	@ManyToMany
-    @JoinTable(name = "id_item_pedido", 
-    joinColumns = @JoinColumn(name = "id_produto"), 
-    inverseJoinColumns = @JoinColumn(name = "id_pedido"))
-	private List<ItemPedido> itemPedido;
+	@OneToMany(mappedBy = "pedido")
+	private List<ItemPedido> listaItemPedido;
 
 	public Long getId() {
 		return id;
@@ -118,12 +115,12 @@ public class Pedido {
 		this.cliente = cliente;
 	}
 
-	public List<ItemPedido> getItemPedido() {
-		return itemPedido;
+	public List<ItemPedido> getListaItemPedido() {
+		return listaItemPedido;
 	}
 
-	public void setItemPedido(List<ItemPedido> itemPedido) {
-		this.itemPedido = itemPedido;
+	public void setListaItemPedido(List<ItemPedido> listaItemPedido) {
+		this.listaItemPedido = listaItemPedido;
 	}
 
 	@Override
