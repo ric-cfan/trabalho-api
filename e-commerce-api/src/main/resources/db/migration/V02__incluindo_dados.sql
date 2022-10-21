@@ -27,10 +27,10 @@ INSERT INTO Categoria (nome, descricao) VALUES
 	('Informática', 'Computadores e demais itens de informática'),
 	('Celulares', 'Celulares e demais aparelhos de comunicação');
 
-INSERT INTO Produto (nome, descricao, qtd_estoque, data_cadastro, valor_unitario, imagem_dados, imagem_tipo, id_categoria) VALUES
-	('Suporte de notebook', 'Item para apoiar o notebook', 100, '2022-10-19', 50.0, NULL, NULL, 1),
-	('Mouse sem fio', 'Um mouse sem fio', 200, '2022-10-20', 25.0, NULL, NULL, 1),
-	('Smartphone', 'Um smartphone', 50, '2022-10-20', 800.0, NULL, NULL, 1);
+INSERT INTO Produto (nome, descricao, qtd_estoque, data_cadastro, valor_unitario, id_categoria) VALUES
+	('Suporte de notebook', 'Item para apoiar o notebook', 100, '2022-10-19', 50.0, 1),
+	('Mouse sem fio', 'Um mouse sem fio', 200, '2022-10-20', 25.0, 1),
+	('Smartphone', 'Um smartphone', 50, '2022-10-20', 800.0, 1);
 	
 INSERT INTO Pedido (data_pedido, data_entrega, data_envio, status, valor_total, id_cliente) VALUES
 	('2022-10-20', '2022-10-30', '2022-10-19', 'T', 100.0, 1),

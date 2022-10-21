@@ -1,15 +1,18 @@
 package org.serratec.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,39 +20,38 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "produto")
 public class Produto {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_produto")
 	private Long id;
-	
+
 	@NotBlank
 	@Column(name = "nome", nullable = false, length = 30, unique = true)
 	private String nome;
-	
+
 	@Column(name = "descricao", length = 200)
 	private String descricao;
-	
+
 	@Column(name = "qtd_estoque")
 	private Integer qtdEstoque;
-	
+
 	@Column(name = "data_cadastro")
 	private LocalDate dataCadastro;
-	
+
 	@NotNull
 	@Column(name = "valor_unitario", nullable = false)
 	private Double valorUnitario;
-	
-	@Lob
-	@Column(name = "imagem_dados")
-	private byte[] imagemDados;
-	
-	@Column(name = "imagem_tipo")
-	private String imagemTipo;
 
 	@ManyToOne
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
+
+	@OneToMany(mappedBy = "produto")
+	private List<ItemPedido> listaItemPedido;
+
+	@OneToOne(mappedBy = "produto")
+	private Imagem imagem;
 
 	public Long getId() {
 		return id;
@@ -99,20 +101,20 @@ public class Produto {
 		this.valorUnitario = valorUnitario;
 	}
 
-	public byte[] getImagemDados() {
-		return imagemDados;
+	public List<ItemPedido> getListaItemPedido() {
+		return listaItemPedido;
 	}
 
-	public void setImagemDados(byte[] imagemDados) {
-		this.imagemDados = imagemDados;
+	public void setListaItemPedido(List<ItemPedido> listaItemPedido) {
+		this.listaItemPedido = listaItemPedido;
 	}
 
-	public String getImagemTipo() {
-		return imagemTipo;
+	public Imagem getImagem() {
+		return imagem;
 	}
 
-	public void setImagemTipo(String imagemTipo) {
-		this.imagemTipo = imagemTipo;
+	public void setImagem(Imagem imagem) {
+		this.imagem = imagem;
 	}
 
 	public Categoria getCategoria() {
@@ -139,6 +141,5 @@ public class Produto {
 		Produto other = (Produto) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
+
 }

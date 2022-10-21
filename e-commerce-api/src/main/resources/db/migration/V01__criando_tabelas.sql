@@ -32,9 +32,15 @@ create table Produto(
 	qtd_estoque int,
 	data_cadastro date,
 	valor_unitario real not null,
-	imagem_dados BYTEA,
-	imagem_tipo varchar(100),
-	id_categoria int REFERENCES Categoria(id_categoria)
+	id_categoria int NOT NULL REFERENCES Categoria(id_categoria)
+);
+
+CREATE TABLE Imagem(
+	id_imagem serial PRIMARY KEY,
+	dados BYTEA,
+	tipo varchar(50),
+	nome varchar(50),
+	id_produto int NOT NULL REFERENCES Produto(id_produto)
 );
 
 
