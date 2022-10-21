@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Table(name = "imagem")
 public class Imagem {
@@ -23,14 +25,15 @@ public class Imagem {
 	private Long id;
 
 	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
 	@Column(name = "dados")
 	private byte[] dados;
 
 	@Column(name = "tipo")
 	private String tipo;
 
-	@Column(name = "nome")
-	private String nome;
+	@Column(name = "url")
+	private String url;
 
 	@NotNull
 	@OneToOne
@@ -78,12 +81,12 @@ public class Imagem {
 		this.tipo = tipo;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public Produto getProduto() {
