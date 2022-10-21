@@ -2,9 +2,8 @@ package org.serratec.controller;
 
 import java.util.List;
 
-import org.serratec.domain.Pedido;
-import org.serratec.dto.PedidoDTO;
-import org.serratec.service.PedidoService;
+import org.serratec.dto.ProdutoDTO;
+import org.serratec.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/pedido")
-public class PedidoController {
+@RequestMapping("/api/produto")
+public class ProdutoController {
 
 	@Autowired
-	private PedidoService pedidoService;
-	
+	private ProdutoService produtoService;
+
 	@GetMapping
-	public ResponseEntity<List<PedidoDTO>> listar() {
-		return ResponseEntity.ok(pedidoService.listar());
+	public ResponseEntity<List<ProdutoDTO>> listar() {
+		return ResponseEntity.ok(produtoService.listar());
 	}
+
 }

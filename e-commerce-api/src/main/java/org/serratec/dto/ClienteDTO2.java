@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.serratec.domain.Cliente;
 
-public class ClienteDTO {
+public class ClienteDTO2 {
 
 	private Long idCliente;
 
@@ -18,7 +18,7 @@ public class ClienteDTO {
 
 	private EnderecoDTO endereco;
 
-	public ClienteDTO(Cliente cliente, EnderecoDTO endereco) {
+	public ClienteDTO2(Cliente cliente, EnderecoDTO endereco) {
 		super();
 		this.idCliente = cliente.getId();
 		this.nomeCompleto = cliente.getNome();
@@ -28,7 +28,7 @@ public class ClienteDTO {
 		this.endereco = endereco;
 	}
 
-	public ClienteDTO(Long idCliente, String nomeCompleto, String cpf, String telefone, LocalDate dataNascimento,
+	public ClienteDTO2(Long idCliente, String nomeCompleto, String cpf, String telefone, LocalDate dataNascimento,
 			EnderecoDTO endereco) {
 		super();
 		this.idCliente = idCliente;
@@ -39,7 +39,7 @@ public class ClienteDTO {
 		this.endereco = endereco;
 	}
 
-	public ClienteDTO() {
+	public ClienteDTO2() {
 		super();
 	}
 

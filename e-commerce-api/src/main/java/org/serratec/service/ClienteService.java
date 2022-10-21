@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.serratec.domain.Cliente;
 import org.serratec.domain.Endereco;
-import org.serratec.dto.ClienteDTO;
+import org.serratec.dto.ClienteDTO2;
 import org.serratec.dto.EnderecoDTO;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.EnderecoRepository;
@@ -20,14 +20,14 @@ public class ClienteService {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 	
-	public List<ClienteDTO> buscaTodos() {
+	public List<ClienteDTO2> buscaTodos() {
 		List<Cliente> clientes = clienteRepository.findAll();
-		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		List<ClienteDTO2> clientesDTO = new ArrayList<>();
 		 
 		for (Cliente cliente : clientes) {
 			Endereco endereco = enderecoRepository.getById(cliente.getEndereco().getId());
 			EnderecoDTO enderecoDTO = new EnderecoDTO(endereco);
-			clientesDTO.add(new ClienteDTO(cliente, enderecoDTO));
+			clientesDTO.add(new ClienteDTO2(cliente, enderecoDTO));
 		}
 
 		 return clientesDTO;
