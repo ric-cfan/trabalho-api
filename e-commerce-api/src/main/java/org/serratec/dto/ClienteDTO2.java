@@ -18,14 +18,15 @@ public class ClienteDTO2 {
 
 	private EnderecoDTO endereco;
 
-	public ClienteDTO2(Cliente cliente, EnderecoDTO endereco) {
+	public ClienteDTO2(Cliente cliente) {
 		super();
 		this.idCliente = cliente.getId();
 		this.nomeCompleto = cliente.getNome();
 		this.cpf = cliente.getCpf();
 		this.telefone = cliente.getTelefone();
 		this.dataNascimento = cliente.getDataNascimento();
-		this.endereco = endereco;
+		EnderecoDTO enderecoDTO = new EnderecoDTO(cliente.getEndereco());
+		this.endereco = enderecoDTO;
 	}
 
 	public ClienteDTO2(Long idCliente, String nomeCompleto, String cpf, String telefone, LocalDate dataNascimento,

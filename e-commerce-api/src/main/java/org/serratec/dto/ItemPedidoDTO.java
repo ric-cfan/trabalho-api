@@ -17,14 +17,15 @@ public class ItemPedidoDTO {
 
 	}
 
-	public ItemPedidoDTO(ItemPedido itemPedido,ProdutoDTO produto) {
+	public ItemPedidoDTO(ItemPedido itemPedido) {
 		this.idItemPedido = itemPedido.getId();
 		this.quantidade = itemPedido.getQuantidade();
 		this.precoVenda = itemPedido.getPrecoVenda();
 		this.percentualDesconto = itemPedido.getPercentualDesconto();
 		this.valorBruto = itemPedido.getValorBruto();
 		this.valorLiquido = itemPedido.getValorLiquido();
-		this.produtoJson1 = produto;
+		ProdutoDTO produtoDTO = new ProdutoDTO(itemPedido.getProduto());
+		this.produtoJson1 = produtoDTO;
 	}
 
 	public Long getIdItemPedido() {

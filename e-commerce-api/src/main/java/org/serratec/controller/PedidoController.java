@@ -2,7 +2,6 @@ package org.serratec.controller;
 
 import java.util.List;
 
-import org.serratec.domain.Pedido;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;

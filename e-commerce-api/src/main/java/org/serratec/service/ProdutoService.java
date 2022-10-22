@@ -27,7 +27,7 @@ public class ProdutoService {
 		List<ProdutoDTO> produtosDTO = new ArrayList<>();
 		
 		for (Produto produto : produtos) {
-			Categoria categoria = categoriaRepository.getById(produto.getCategoria().getId());
+			Categoria categoria = categoriaRepository.findById(produto.getCategoria().getId()).get();
 			CategoriaDTO categoriaDTO = new CategoriaDTO(categoria);
 			produtosDTO.add(new ProdutoDTO(produto, categoriaDTO));
 		}

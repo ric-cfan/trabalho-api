@@ -1,8 +1,10 @@
 package org.serratec.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.serratec.domain.ItemPedido;
 import org.serratec.domain.Pedido;
 
 public class PedidoDTO {
@@ -11,28 +13,31 @@ public class PedidoDTO {
 	private LocalDate dataEntrega;
 	private LocalDate dataEnvio;
 	private String status;
-	
-	private ClienteDTO2 clienteJson2;
 
-	
-	private List<ItemPedidoDTO>  itemPedido;
-	
-	
-	 public PedidoDTO() {
-		
+	private ClienteDTO2 cliente;
+
+	private List<ItemPedidoDTO> itens;
+
+	public PedidoDTO() {
+
 	}
-	 
-	 public PedidoDTO(Pedido pedido,ClienteDTO2 cliente,List<ItemPedidoDTO> itemPedido) {
-		 this.idPedido = pedido.getId();
-		 this.dataPedido = pedido.getDataPedido();
-		 this.dataEntrega = pedido.getDataEntrega();
-		 this.dataEnvio = pedido.getDataEnvio();
-		 this.status = pedido.getStatus();
-		 this.clienteJson2 = cliente;
-		
-		 this.itemPedido = itemPedido ;
-		 
-	 }
+
+	public PedidoDTO(Pedido pedido) {
+		this.idPedido = pedido.getId();
+		this.dataPedido = pedido.getDataPedido();
+		this.dataEntrega = pedido.getDataEntrega();
+		this.dataEnvio = pedido.getDataEnvio();
+		this.status = pedido.getStatus();
+		ClienteDTO2 clienteDTO = new ClienteDTO2(pedido.getCliente());
+		this.cliente = clienteDTO;
+		List<ItemPedido> listaItemPedidos = new ArrayList<>(pedido.getListaItemPedido());
+		List<ItemPedidoDTO> listaItemPedidosDTO = new ArrayList<>();
+		for (ItemPedido itemPedido : listaItemPedidos) {
+			listaItemPedidosDTO.add(new ItemPedidoDTO(itemPedido));
+		}
+		this.itens = listaItemPedidosDTO;
+
+	}
 
 	public Long getIdPedido() {
 		return idPedido;
@@ -74,32 +79,20 @@ public class PedidoDTO {
 		this.status = status;
 	}
 
-	public ClienteDTO2 getClienteJson2() {
-		return clienteJson2;
+	public ClienteDTO2 getCliente() {
+		return cliente;
 	}
 
-	public void setClienteJson2(ClienteDTO2 clienteJson2) {
-		this.clienteJson2 = clienteJson2;
+	public void setCliente(ClienteDTO2 cliente) {
+		this.cliente = cliente;
 	}
 
-
-
-	public List<ItemPedidoDTO> getItemPedido() {
-		return itemPedido;
+	public List<ItemPedidoDTO> getItens() {
+		return itens;
 	}
 
-	public void setItemPedido(List<ItemPedidoDTO> itemPedido) {
-		this.itemPedido = itemPedido;
+	public void setItens(List<ItemPedidoDTO> itens) {
+		this.itens = itens;
 	}
 
-
-	 
-	 																								
 }
-
-
-
-
-
-
-
