@@ -3,6 +3,7 @@ package org.serratec.domain;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +49,7 @@ public class Cliente {
 	private LocalDate dataNascimento;
 	
 	@NotNull
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco")
 	private Endereco endereco;
 

@@ -20,16 +20,6 @@ public class ProdutoDTO {
 
 	}
 
-	public ProdutoDTO(Produto produto,CategoriaDTO categoria) {
-		this.idProduto = produto.getId();
-		this.nome = produto.getNome();
-		this.descricao = produto.getDescricao();
-		this.qtdEstoque = produto.getQtdEstoque();
-		this.dataCadastro = produto.getDataCadastro();
-		this.valorUnitario = produto.getValorUnitario();
-		this.categoria = categoria;
-	}
-	
 	public ProdutoDTO(Produto produto) {
 		this.idProduto = produto.getId();
 		this.nome = produto.getNome();
@@ -37,7 +27,8 @@ public class ProdutoDTO {
 		this.qtdEstoque = produto.getQtdEstoque();
 		this.dataCadastro = produto.getDataCadastro();
 		this.valorUnitario = produto.getValorUnitario();
-	
+		CategoriaDTO categoriaDTO = new CategoriaDTO(produto.getCategoria());
+		this.categoria = categoriaDTO;
 	}
 	
 	
