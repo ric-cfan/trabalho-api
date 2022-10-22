@@ -2,7 +2,9 @@ package org.serratec.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.serratec.domain.Pedido;
 import org.serratec.domain.Produto;
 import org.serratec.dto.ProdutoDTO;
 import org.serratec.repository.ProdutoRepository;
@@ -26,5 +28,16 @@ public class ProdutoService {
 		return produtosDTO;
 	}
 	
+	public Optional<Produto> findById(Long idProduto) {
+        return produtoRepository.findById(idProduto);
+    }
+
+    public Produto save(Produto produto) {
+        return produtoRepository.save(produto);
+    }
+
+    public void deleteById(Long idProduto) {
+        produtoRepository.deleteById(idProduto);
+    }
 	
 }

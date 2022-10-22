@@ -2,6 +2,7 @@ package org.serratec.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.serratec.domain.Cliente;
 import org.serratec.dto.ClienteDTO2;
@@ -25,5 +26,17 @@ public class ClienteService {
 
 		 return clientesDTO;
 	}
+
+    public Optional<Cliente> findById(Long idCliente) {
+        return clienteRepository.findById(idCliente);
+    }
+
+    public Cliente save(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    public void deleteById(Long idCliente) {
+        clienteRepository.deleteById(idCliente);
+    }
 
 }
