@@ -3,11 +3,14 @@ package org.serratec.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.serratec.domain.Endereco;
 import org.serratec.dto.EnderecoDTO;
+import org.serratec.dto.EnderecoViaCepDTO;
 import org.serratec.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class EnderecoService {
@@ -37,4 +40,36 @@ public class EnderecoService {
     public void deleteById(Long idEndereco) {
         enderecoRepository.deleteById(idEndereco);
     }
+    
+    public EnderecoViaCepDTO buscar(String cep) {
+	       Optional<Endereco>  endereco = Optional.ofNullable(enderecoRepository.findByCep(cep));
+	       if (endereco.isPresent()) {
+	           return new EnderecoViaCepDTO(endereco.get());
+	       } else {
+	    	   
+	           RestTemplate restTemplate = new RestTemplate(); 
+	           
+	           String uri = "http://viacep.com.br/ws/"+cep+"/json";
+
+	           Optional<EnderecoViaCepDTO> enderecoViaCep = Optional.ofNullable(restTemplate.getForObject(uri, EnderecoViaCepDTO.class));
+	           if (enderecoViaCep.get().getCep()!=null) {
+	               String cepSemTraco = enderecoViaCep.get().getCep().replaceAll("-", "");
+	               enderecoViaCep.get().setCep(cepSemTraco);
+	               Endereco enderecoBanco = new Endereco();
+	               enderecoBanco.setCep(enderecoViaCep.get().getCep());
+	               enderecoBanco.setBairro(enderecoViaCep.get().getBairro());
+	               enderecoBanco.setComplemento(enderecoViaCep.get().getComplemento());
+	               enderecoBanco.setCidade(enderecoViaCep.get().getLocalidade());
+	               enderecoBanco.setRua(enderecoViaCep.get().getLogradouro());
+	               enderecoBanco.setUf(enderecoViaCep.get().getUf());
+	               return inserir(enderecoBanco);
+	           } else {
+	               return null;
+	           }
+	       }
+	   }
+
+	   private EnderecoViaCepDTO inserir(Endereco endereco) {
+	       return new EnderecoViaCepDTO(enderecoRepository.save(endereco));
+	   }
 }
