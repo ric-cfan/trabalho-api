@@ -1,6 +1,7 @@
 package org.serratec.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -17,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.serratec.dto.ClienteDTO1;
 
 @Entity
 @Table(name = "cliente")
@@ -52,7 +55,30 @@ public class Cliente {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco")
 	private Endereco endereco;
+	
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Pedido> pedidos;
 
+	public Cliente() {
+		
+	}
+	
+	public Cliente(Long idCliente,String cpf,String telefone,LocalDate dataNascimento,String numero) {
+		this.id = idCliente;
+		this.cpf = cpf;
+		this.telefone = telefone;
+		this.dataNascimento = dataNascimento;
+	}
+	
+	public Cliente(ClienteDTO1 clienteDTO1,Endereco endereco) {
+		this.id = clienteDTO1.getIdCliente();
+		this.cpf = clienteDTO1.getCpf();
+		this.telefone = clienteDTO1.getTelefone();
+		this.dataNascimento = clienteDTO1.getDataNascimento();
+		this.endereco = endereco;
+	}
+	
+	
 	public Long getId() {
 		return id;
 	}

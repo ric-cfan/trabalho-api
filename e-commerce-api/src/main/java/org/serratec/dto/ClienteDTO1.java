@@ -7,10 +7,13 @@ import org.serratec.domain.Cliente;
 
 public class ClienteDTO1 {
 	private Long idCliente;
+	private String nomeCompleto;
 	private String cpf;
 	private String telefone;
 	private LocalDate dataNascimento;
+	private String cep;
 	private String numero;
+	
 
 
 	public ClienteDTO1() {
@@ -19,11 +22,30 @@ public class ClienteDTO1 {
 
 	public ClienteDTO1(Cliente cliente) {
 		this.idCliente = cliente.getId();
+		this.nomeCompleto = cliente.getNome();
 		this.cpf = cliente.getCpf();
 		this.telefone = cliente.getTelefone();
 		this.dataNascimento = cliente.getDataNascimento();
+		this.cep = cliente.getEndereco().getCep();
 		this.numero = cliente.getEndereco().getNumero();
+		
+	}
 
+	
+	public String getNomeCompleto() {
+		return nomeCompleto;
+	}
+
+	public void setNomeCompleto(String nomeCompleto) {
+		this.nomeCompleto = nomeCompleto;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 
 	public Long getIdCliente() {

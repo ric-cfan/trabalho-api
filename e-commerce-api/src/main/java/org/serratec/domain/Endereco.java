@@ -1,6 +1,7 @@
 package org.serratec.domain;
 
 import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,45 +11,64 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import org.serratec.dto.ClienteDTO1;
+import org.serratec.dto.EnderecoViaCepDTO;
+
 @Entity
 @Table(name = "endereco")
 public class Endereco {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_endereco")
 	private Long id;
-	
+
 	@NotBlank
 	@Column(name = "cep", nullable = false, length = 8)
-	private String cep;   
-	
+	private String cep;
+
 	@NotBlank
 	@Column(name = "rua", nullable = false, length = 80)
 	private String rua;
-	
+
 	@NotBlank
 	@Column(name = "bairro", nullable = false, length = 50)
-	private String bairro; 
-	
+	private String bairro;
+
 	@NotBlank
 	@Column(name = "cidade", nullable = false, length = 80)
 	private String cidade;
-	
+
 	@NotBlank
 	@Column(name = "numero", nullable = false, length = 20)
-	private String numero; 
-	
+	private String numero;
+
 	@Column(name = "complemento", length = 80)
-	private String complemento; 
-	
+	private String complemento;
+
 	@NotBlank
 	@Column(name = "uf", nullable = false, length = 2)
-	private String uf;  
-	
+	private String uf;
+
 	@OneToOne(mappedBy = "endereco")
 	private Cliente cliente;
 
+	public Endereco() {
+
+	}
+
+	public Endereco(EnderecoViaCepDTO endereco,ClienteDTO1 cliente) {
+		this.rua = endereco.getLogradouro();
+		this.bairro = endereco.getBairro();
+		this.complemento = endereco.getComplemento();
+		this.cidade = endereco.getLocalidade();
+		this.uf = endereco.getUf();
+		this.cep = endereco.getCep();
+		this.numero = cliente.getNumero();
+	}
+
+	
+	
 	public Long getId() {
 		return id;
 	}

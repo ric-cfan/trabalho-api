@@ -3,8 +3,11 @@ package org.serratec.controller;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
 import javax.validation.Valid;
+
 import org.serratec.domain.Cliente;
+import org.serratec.dto.ClienteDTO1;
 import org.serratec.dto.ClienteDTO2;
 import org.serratec.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -55,12 +59,11 @@ public class ClienteController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Cliente> buscarPorId(@PathVariable Long idCliente) {
-		Optional<Cliente> cliente = clienteService.findById(idCliente);
+	public ResponseEntity<ClienteDTO2> buscarPorId(@PathVariable Long idCliente) {
+		Optional<ClienteDTO2> cliente = clienteService.findById(idCliente);
 		if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get()); 
             }
-            
             return ResponseEntity.notFound().build();
 	}
 	
@@ -72,17 +75,18 @@ public class ClienteController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Cliente> cadastrar(@Valid @RequestBody Cliente cliente) {
-		cliente = clienteService.save(cliente);
+	public ResponseEntity<ClienteDTO2> cadastrar(@Valid @RequestBody ClienteDTO1 cliente) {
+		ClienteDTO2 clienteDTO2;
+		clienteDTO2 = clienteService.cadastrar(cliente);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
-				.buildAndExpand(cliente.getId())
+				.buildAndExpand(clienteDTO2.getIdCliente())
 				.toUri();
-		return ResponseEntity.created(uri).body(cliente);
+		return ResponseEntity.created(uri).body(clienteDTO2);
 	}
-	
-	@PutMapping("/{idCliente}")
+					
+	@PutMapping("/atualizar/{idCliente}")
 	@ApiOperation(value = "Atualiza dados de um Cliente", notes = "Atualizar Cliente")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Cliente Atualizado"),
@@ -97,7 +101,7 @@ public class ClienteController {
 		return ResponseEntity.ok(cliente);
 	}
 	
-	@DeleteMapping("/{idCliente}")
+	@DeleteMapping("/deletar/{idCliente}")
 	@ApiOperation(value = "Remove um Cliente", notes = "Remover Cliente")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Cliente Removido"),

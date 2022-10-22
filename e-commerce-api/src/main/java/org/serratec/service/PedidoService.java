@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.serratec.domain.Endereco;
 import org.serratec.domain.Pedido;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.repository.PedidoRepository;
