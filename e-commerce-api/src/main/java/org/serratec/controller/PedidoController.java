@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.serratec.domain.Pedido;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
 import org.serratec.service.PedidoService;
@@ -75,7 +74,7 @@ public class PedidoController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<PedidoDTO> cadastrar(@Valid @RequestBody PedidoDTO2 pedido) {
-		PedidoDTO pedidoDTO = pedidoService.save(pedido);
+		PedidoDTO pedidoDTO = pedidoService.cadastrar(pedido);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
@@ -93,9 +92,9 @@ public class PedidoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Pedido> salvar(@PathVariable Long idPedido, @Valid @RequestBody PedidoDTO2 pedido) {
-		pedidoService.save(pedido);
-		return ResponseEntity.ok(null);
+	public ResponseEntity<PedidoDTO> salvar(@PathVariable Long idPedido, @Valid @RequestBody PedidoDTO2 pedido) {
+		PedidoDTO pedidoDTO = pedidoService.atualizar(pedido, idPedido);
+		return ResponseEntity.ok(pedidoDTO);
 	}
 
 	@DeleteMapping("/{idPedido}")

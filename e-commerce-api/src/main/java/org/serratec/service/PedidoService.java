@@ -45,7 +45,7 @@ public class PedidoService {
         return Optional.ofNullable(pedidoDTO);
     }
 
-    public PedidoDTO save(PedidoDTO2 pedido) {
+    public PedidoDTO cadastrar(PedidoDTO2 pedido) {
     	
     	Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
     	
@@ -68,6 +68,32 @@ public class PedidoService {
 
         return pedidoDTO;
     }
+    
+public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
+    	
+    	Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
+    	
+    	List<ItemPedido> listaItemPedido = new ArrayList<>();
+    	List<ItemPedidoDTO2> listaItemPedidoDTO = new ArrayList<ItemPedidoDTO2>(pedido.getItens());
+    	Double valorTotal = 0.;
+    	
+    	for (ItemPedidoDTO2 itemPedidoDTO2 : listaItemPedidoDTO) {
+    		
+    		Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
+    		listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
+    		
+    		valorTotal += produto.getValorUnitario() * itemPedidoDTO2.getPercentualDesconto() * itemPedidoDTO2.getQuantidade();
+		}
+    	
+    	Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);
+    	pedidoBanco.setId(idPedido);
+    	Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
+    	
+    	PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
+
+        return pedidoDTO;
+    }
+
 
     public void deleteById(Long idPedido) {
         pedidoRepository.deleteById(idPedido);
