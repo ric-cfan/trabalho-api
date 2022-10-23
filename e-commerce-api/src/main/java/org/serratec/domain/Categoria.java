@@ -2,6 +2,8 @@ package org.serratec.domain;
 
 import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,24 +13,42 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import org.serratec.dto.CategoriaDTO2;
+
 @Entity
-@Table(name="categoria")
+@Table(name = "categoria")
 public class Categoria {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id_categoria")
+	@Column(name = "id_categoria")
 	private Long id;
-	
+
 	@NotBlank
-	@Column(name="nome", nullable = false, length = 30, unique = true)
+	@Column(name = "nome", nullable = false, length = 30, unique = true)
 	private String nome;
-	
-	@Column(name="descricao", length = 200)
+
+	@Column(name = "descricao", length = 200)
 	private String descricao;
-	
-	@OneToMany(mappedBy = "categoria")
+
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
 	private List<Produto> produto;
+
+	public Categoria() {
+
+	}
+
+	public Categoria(CategoriaDTO2 categoria) {
+
+		this.nome = categoria.getNome();
+		this.descricao = categoria.getDescricao();
+	}
+
+	public Categoria(CategoriaDTO2 categoria,Long id) {
+		this.id = id;
+		this.nome = categoria.getNome();
+		this.descricao = categoria.getDescricao();
+	}
 
 	public Long getId() {
 		return id;
@@ -78,5 +98,5 @@ public class Categoria {
 		Categoria other = (Categoria) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }

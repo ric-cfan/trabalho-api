@@ -44,11 +44,11 @@ public class Produto {
 	@Column(name = "valor_unitario", nullable = false)
 	private Double valorUnitario;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 
-	@OneToMany(mappedBy = "produto")
+	@OneToMany(mappedBy = "produto",cascade = CascadeType.ALL)
 	private List<ItemPedido> listaItemPedido;
 
 	@OneToOne(mappedBy = "produto", cascade = CascadeType.ALL)

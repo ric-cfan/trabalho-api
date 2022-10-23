@@ -3,8 +3,12 @@ package org.serratec.controller;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
 import javax.validation.Valid;
+
 import org.serratec.domain.Categoria;
+import org.serratec.dto.CategoriaDTO;
+import org.serratec.dto.CategoriaDTO2;
 import org.serratec.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/categoria")
@@ -37,7 +43,7 @@ public class CategoriaController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<List<Categoria>> listarTodos() {
+	public ResponseEntity<List<CategoriaDTO>> listarTodos() {
 		return ResponseEntity.ok(categoriaService.listar());
 	}
 	
@@ -50,8 +56,8 @@ public class CategoriaController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Categoria> buscarPorId(@PathVariable Long idCategoria) {
-		Optional<Categoria> categoria = categoriaService.findById(idCategoria);
+	public ResponseEntity<CategoriaDTO> buscarPorId(@PathVariable Long idCategoria) {
+		Optional<CategoriaDTO> categoria = Optional.ofNullable(categoriaService.findById(idCategoria)) ;
 		if (categoria.isPresent()) {
             return ResponseEntity.ok(categoria.get()); 
             }
@@ -67,17 +73,17 @@ public class CategoriaController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Categoria> cadastrar(@Valid @RequestBody Categoria categoria) {
-		categoria = categoriaService.save(categoria);
+	public ResponseEntity<CategoriaDTO> cadastrar(@Valid @RequestBody CategoriaDTO2 categoria) {
+		CategoriaDTO categoriaDTO = categoriaService.save(categoria);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
-				.buildAndExpand(categoria.getId())
+				.buildAndExpand(categoriaDTO.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(categoria);
+		return ResponseEntity.created(uri).body(categoriaDTO);
 	}
 	
-	@PutMapping("/{idCategoria}")
+	@PutMapping("/atualizar/{idCategoria}")
 	@ApiOperation(value = "Atualiza dados de uma Categoria", notes = "Atualizar Categoria")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Categoria Atualizada"),
@@ -86,13 +92,12 @@ public class CategoriaController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Categoria> salvar(@PathVariable Long idCategoria, @Valid @RequestBody Categoria categoria) {
-		categoria.setId(idCategoria);
-		categoria = categoriaService.save(categoria);
-		return ResponseEntity.ok(categoria);
+	public ResponseEntity<CategoriaDTO> salvar(@PathVariable Long idCategoria, @Valid @RequestBody CategoriaDTO2 categoria) {
+		CategoriaDTO categoriaMostrar = categoriaService.salvar(idCategoria,categoria);
+		return ResponseEntity.ok(categoriaMostrar);
 	}
 	
-	@DeleteMapping("/{idCategoria}")
+	@DeleteMapping("/deletar/{idCategoria}")
 	@ApiOperation(value = "Remove uma Categoria", notes = "Remover Categoria")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Categoria Removida"),

@@ -1,11 +1,19 @@
 package org.serratec.dto;
 
-public class CategoriaInserirDTO {
+import org.serratec.domain.Categoria;
+
+public class CategoriaDTO2 {
+
 	private String nome;
 	private String descricao;
 
-	public CategoriaInserirDTO() {
+	public CategoriaDTO2() {
 
+	}
+	
+	public CategoriaDTO2(Categoria categoria) {
+		this.nome = categoria.getNome();
+		this.descricao = categoria.getDescricao();
 	}
 
 	public String getNome() {

@@ -3,7 +3,9 @@ package org.serratec.controller;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
 import javax.validation.Valid;
+
 import org.serratec.domain.Endereco;
 import org.serratec.dto.EnderecoDTO;
 import org.serratec.dto.EnderecoViaCepDTO;
@@ -15,13 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/endereco")
