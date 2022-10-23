@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.serratec.domain.Pedido;
 import org.serratec.dto.PedidoDTO;
+import org.serratec.dto.PedidoDTO2;
 import org.serratec.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,8 @@ public class PedidoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<List<PedidoDTO>> listar() {
-		return ResponseEntity.ok(pedidoService.listar());
+	public ResponseEntity<List<PedidoDTO>> listarTodos() {
+		return ResponseEntity.ok(pedidoService.listarTodos());
 	}
 
     @GetMapping("/{idPedido}")
@@ -55,8 +56,8 @@ public class PedidoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Pedido> buscarPorId(@PathVariable Long idPedido) {
-		Optional<Pedido> pedido = pedidoService.findById(idPedido);
+	public ResponseEntity<PedidoDTO> buscarPorId(@PathVariable Long idPedido) {
+		Optional<PedidoDTO> pedido = pedidoService.findById(idPedido);
 		if (pedido.isPresent()) {
             return ResponseEntity.ok(pedido.get()); 
             }
@@ -73,14 +74,14 @@ public class PedidoController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Pedido> cadastrar(@Valid @RequestBody Pedido pedido) {
-		pedido = pedidoService.save(pedido);
+	public ResponseEntity<PedidoDTO> cadastrar(@Valid @RequestBody PedidoDTO2 pedido) {
+		PedidoDTO pedidoDTO = pedidoService.save(pedido);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
-				.buildAndExpand(pedido.getId())
+				.buildAndExpand(pedidoDTO.getIdPedido())
 				.toUri();
-		return ResponseEntity.created(uri).body(pedido);
+		return ResponseEntity.created(uri).body(pedidoDTO);
 	}
 
 	@PutMapping("/{idPedido}")
@@ -92,10 +93,9 @@ public class PedidoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Pedido> salvar(@PathVariable Long idPedido, @Valid @RequestBody Pedido pedido) {
-		pedido.setId(idPedido);
-		pedido = pedidoService.save(pedido);
-		return ResponseEntity.ok(pedido);
+	public ResponseEntity<Pedido> salvar(@PathVariable Long idPedido, @Valid @RequestBody PedidoDTO2 pedido) {
+		pedidoService.save(pedido);
+		return ResponseEntity.ok(null);
 	}
 
 	@DeleteMapping("/{idPedido}")

@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.serratec.domain.Endereco;
 import org.serratec.dto.EnderecoDTO;
 import org.serratec.dto.EnderecoViaCepDTO;
-import org.serratec.repository.ClienteRepository;
+//import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class EnderecoService {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+//	@Autowired
+//	private ClienteRepository clienteRepository;
 	
 	public List<EnderecoDTO> buscaTodos() {
 		List<Endereco> enderecos = enderecoRepository.findAll();
@@ -73,7 +73,7 @@ public class EnderecoService {
 		}
 	}
 
-	private EnderecoViaCepDTO inserir(Endereco endereco) {
-		return new EnderecoViaCepDTO(enderecoRepository.save(endereco));
-	}
+//	private EnderecoViaCepDTO inserir(Endereco endereco) {
+//		return new EnderecoViaCepDTO(enderecoRepository.save(endereco));
+//	}
 }

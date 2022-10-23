@@ -17,41 +17,73 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.serratec.dto.PedidoDTO2;
+
 @Entity
-@Table(name="pedido")
+@Table(name = "pedido")
 public class Pedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_pedido")
 	private Long id;
-	
+
 	@NotNull
 	@Column(name = "data_pedido")
 	private LocalDate dataPedido;
-	
+
 	@NotNull
 	@Column(name = "data_entrega")
 	private LocalDate dataEntrega;
-	
+
 	@NotNull
 	@Column(name = "data_envio")
 	private LocalDate dataEnvio;
-	
+
 	@NotBlank
 	@Column(name = "status", nullable = false, length = 1)
 	private String status;
-	
+
 	@NotNull
 	@Column(name = "valor_total", nullable = false)
 	private Double valor_total;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
+
+	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
-	
+
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> listaItemPedido;
+
+	public Pedido(Long id, @NotNull LocalDate dataPedido, @NotNull LocalDate dataEntrega, @NotNull LocalDate dataEnvio,
+			@NotBlank String status, @NotNull Double valor_total, Cliente cliente, List<ItemPedido> listaItemPedido) {
+		super();
+		this.id = id;
+		this.dataPedido = dataPedido;
+		this.dataEntrega = dataEntrega;
+		this.dataEnvio = dataEnvio;
+		this.status = status;
+		this.valor_total = valor_total;
+		this.cliente = cliente;
+		this.listaItemPedido = listaItemPedido;
+	}
+
+	public Pedido(PedidoDTO2 pedido, Double valorTotal, Cliente cliente, List<ItemPedido> listaItemPedido) {
+		this.dataPedido = pedido.getDataPedido();
+		this.dataEntrega = pedido.getDataEntrega();
+		this.dataEnvio = pedido.getDataEnvio();
+		this.status = pedido.getStatus();
+		this.valor_total = valorTotal;
+		this.cliente = cliente;
+		this.listaItemPedido = listaItemPedido;
+		for (ItemPedido itemPedido : listaItemPedido) {
+			itemPedido.setPedido(this);
+		}
+	}
+
+	public Pedido() {
+		super();
+	}
 
 	public Long getId() {
 		return id;
@@ -133,5 +165,5 @@ public class Pedido {
 		Pedido other = (Pedido) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
