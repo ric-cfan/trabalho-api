@@ -24,61 +24,70 @@ import org.serratec.dto.ClienteDTO1;
 @Entity
 @Table(name = "cliente")
 public class Cliente {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_cliente")
 	private Long id;
-	
+
 	@NotBlank
 	@Column(name = "nome_completo", nullable = false, length = 50)
 	private String nome;
-	
+
 	@NotBlank
 	@Email
 	@Column(name = "email", nullable = false, length = 80, unique = true)
 	private String email;
-	
+
 	@NotBlank
 	@CPF
 	@Column(name = "cpf", nullable = false, length = 11, unique = true)
 	private String cpf;
-	
+
 	@NotBlank
 	@Column(name = "telefone", nullable = false, length = 40)
 	private String telefone;
-	
+
 	@Column(name = "data_nascimento")
 	private LocalDate dataNascimento;
-	
+
 	@NotNull
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco")
 	private Endereco endereco;
-	
+
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Pedido> pedidos;
+	private List<Pedido> pedidos;
 
 	public Cliente() {
-		
+
 	}
-	
-	public Cliente(Long idCliente,String cpf,String telefone,LocalDate dataNascimento,String numero) {
+
+	public Cliente(Long idCliente, String cpf, String telefone, LocalDate dataNascimento, String numero) {
 		this.id = idCliente;
 		this.cpf = cpf;
 		this.telefone = telefone;
 		this.dataNascimento = dataNascimento;
 	}
-	
-	public Cliente(ClienteDTO1 clienteDTO1,Endereco endereco) {
+
+	public Cliente(ClienteDTO1 clienteDTO1, Endereco endereco) {
 		this.id = clienteDTO1.getIdCliente();
+		this.nome = clienteDTO1.getNomeCompleto();
+		this.email = clienteDTO1.getEmail();
 		this.cpf = clienteDTO1.getCpf();
 		this.telefone = clienteDTO1.getTelefone();
 		this.dataNascimento = clienteDTO1.getDataNascimento();
 		this.endereco = endereco;
 	}
-	
-	
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -151,5 +160,5 @@ public class Cliente {
 		Cliente other = (Cliente) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }

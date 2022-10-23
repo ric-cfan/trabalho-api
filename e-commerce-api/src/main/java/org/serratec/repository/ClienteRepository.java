@@ -3,8 +3,6 @@ package org.serratec.repository;
 import java.util.Optional;
 
 import org.serratec.domain.Cliente;
-import org.serratec.domain.Endereco;
-import org.serratec.dto.ClienteDTO1;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClienteRepository extends JpaRepository <Cliente, Long>{

@@ -3,18 +3,34 @@ package org.serratec.dto;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.serratec.domain.Cliente;
 
 public class ClienteDTO1 {
 	private Long idCliente;
-	private String nomeCompleto;
-	private String cpf;
-	private String telefone;
-	private LocalDate dataNascimento;
-	private String cep;
-	private String numero;
-	
 
+	@NotBlank
+	private String nomeCompleto;
+
+	@NotBlank
+	private String cpf;
+
+	@NotBlank
+	private String telefone;
+
+	@NotNull
+	private LocalDate dataNascimento;
+
+	@NotBlank
+	private String cep;
+
+	@NotBlank
+	private String numero;
+
+	@NotBlank
+	private String email;
 
 	public ClienteDTO1() {
 
@@ -28,24 +44,28 @@ public class ClienteDTO1 {
 		this.dataNascimento = cliente.getDataNascimento();
 		this.cep = cliente.getEndereco().getCep();
 		this.numero = cliente.getEndereco().getNumero();
-		
-	}
+		this.email = cliente.getEmail();
 
+	}
 	
-	public String getNomeCompleto() {
-		return nomeCompleto;
+	public ClienteDTO1(Cliente cliente, Long idCliente) {
+		this.idCliente = idCliente;
+		this.nomeCompleto = cliente.getNome();
+		this.cpf = cliente.getCpf();
+		this.telefone = cliente.getTelefone();
+		this.dataNascimento = cliente.getDataNascimento();
+		this.cep = cliente.getEndereco().getCep();
+		this.numero = cliente.getEndereco().getNumero();
+		this.email = cliente.getEmail();
+
 	}
 
-	public void setNomeCompleto(String nomeCompleto) {
-		this.nomeCompleto = nomeCompleto;
+	public String getEmail() {
+		return email;
 	}
 
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Long getIdCliente() {
@@ -56,6 +76,13 @@ public class ClienteDTO1 {
 		this.idCliente = idCliente;
 	}
 
+	public String getNomeCompleto() {
+		return nomeCompleto;
+	}
+
+	public void setNomeCompleto(String nomeCompleto) {
+		this.nomeCompleto = nomeCompleto;
+	}
 
 	public String getCpf() {
 		return cpf;
@@ -79,6 +106,14 @@ public class ClienteDTO1 {
 
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 
 	public String getNumero() {

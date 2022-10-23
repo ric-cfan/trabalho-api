@@ -46,7 +46,7 @@ public class Pedido {
 	@Column(name = "valor_total", nullable = false)
 	private Double valor_total;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 	

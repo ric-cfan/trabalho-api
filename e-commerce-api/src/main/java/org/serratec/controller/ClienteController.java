@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.serratec.domain.Cliente;
 import org.serratec.dto.ClienteDTO1;
 import org.serratec.dto.ClienteDTO2;
 import org.serratec.service.ClienteService;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,7 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/cliente")
@@ -67,7 +67,7 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
 	}
 	
-	@PostMapping({"/cadastrar"})
+	@PostMapping
 	@ApiOperation(value = "Insere os dados de um Cliente", notes = "Inserir Cliente")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Cliente adicionado"),
@@ -86,7 +86,7 @@ public class ClienteController {
 		return ResponseEntity.created(uri).body(clienteDTO2);
 	}
 					
-	@PutMapping("/atualizar/{idCliente}")
+	@PutMapping("/{idCliente}")
 	@ApiOperation(value = "Atualiza dados de um Cliente", notes = "Atualizar Cliente")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Cliente Atualizado"),
@@ -95,10 +95,15 @@ public class ClienteController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Cliente> salvar(@PathVariable Long idCliente, @Valid @RequestBody Cliente cliente) {
-		cliente.setId(idCliente);
-		cliente = clienteService.save(cliente);
-		return ResponseEntity.ok(cliente);
+	public ResponseEntity<ClienteDTO2> salvar(@PathVariable Long idCliente, @Valid @RequestBody ClienteDTO1 cliente) {
+		ClienteDTO2 clienteDTO2;
+		clienteDTO2 = clienteService.atualizar(cliente, idCliente);
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{idCliente}")
+				.buildAndExpand(clienteDTO2.getIdCliente())
+				.toUri();
+		return ResponseEntity.created(uri).body(clienteDTO2);
 	}
 	
 	@DeleteMapping("/deletar/{idCliente}")

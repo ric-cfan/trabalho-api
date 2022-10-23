@@ -13,6 +13,7 @@ import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -40,6 +41,7 @@ public class ClienteService {
         return cliente;
     }
 
+	@Transactional
     public ClienteDTO2 cadastrar(ClienteDTO1 cliente) {
     	Optional<Endereco> endereco = Optional.ofNullable(enderecoRepository.findByCep(cliente.getCep()));
 		if (endereco.isPresent()) {
@@ -81,9 +83,56 @@ public class ClienteService {
 		}
 	
     }
+	
+	@Transactional
+    public ClienteDTO2 atualizar(ClienteDTO1 cliente, Long idCliente) {
+    	
+		if (!clienteRepository.existsById(idCliente)) {
+			return null;
+		}
+		
+		cliente.setIdCliente(idCliente);
+		Optional<Endereco> endereco = Optional.ofNullable(enderecoRepository.findByCep(cliente.getCep()));
 
-    public Cliente save(Cliente cliente) {
-        return clienteRepository.save(cliente) ;
+    	if (endereco.isPresent()) {
+			
+			EnderecoViaCepDTO enderecoBanco = new EnderecoViaCepDTO(endereco.get());
+			Endereco enderecoCadastro = new Endereco(enderecoBanco,cliente);
+			Cliente clienteBanco = new Cliente(cliente, enderecoCadastro);
+			clienteRepository.save(clienteBanco);
+			
+			ClienteDTO2 clienteDTO2 = new ClienteDTO2(clienteRepository.findById(idCliente).get());
+			return clienteDTO2;
+		} else {
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			String uri = "http://viacep.com.br/ws/" + cliente.getCep() + "/json";
+
+			Optional<EnderecoViaCepDTO> enderecoViaCep = Optional.ofNullable(restTemplate.getForObject(uri, EnderecoViaCepDTO.class));
+			if (enderecoViaCep.get().getCep() != null) {
+				String cepSemTraco = enderecoViaCep.get().getCep().replaceAll("-", "");
+				enderecoViaCep.get().setCep(cepSemTraco);
+				EnderecoViaCepDTO enderecoBanco = new EnderecoViaCepDTO();
+				enderecoBanco.setCep(enderecoViaCep.get().getCep());
+				enderecoBanco.setBairro(enderecoViaCep.get().getBairro());
+				enderecoBanco.setComplemento(enderecoViaCep.get().getComplemento());
+				enderecoBanco.setLocalidade(enderecoViaCep.get().getLocalidade());
+				enderecoBanco.setLogradouro(enderecoViaCep.get().getLogradouro());
+				enderecoBanco.setUf(enderecoViaCep.get().getUf());
+				
+				Endereco enderecoCadastro = new Endereco(enderecoBanco,cliente);
+				Cliente clienteBanco = new Cliente(cliente, enderecoCadastro);
+				clienteRepository.save(clienteBanco);
+				ClienteDTO2 clienteDTO2 = new ClienteDTO2(clienteRepository.findById(idCliente).get());
+				return clienteDTO2;
+				
+			} else {
+				return null;
+			}
+			
+		}
+	
     }
     
     public void deleteById(Long idCliente) {
