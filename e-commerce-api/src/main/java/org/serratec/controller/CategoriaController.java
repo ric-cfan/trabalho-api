@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.serratec.domain.Categoria;
 import org.serratec.dto.CategoriaDTO;
 import org.serratec.dto.CategoriaDTO2;
 import org.serratec.service.CategoriaService;

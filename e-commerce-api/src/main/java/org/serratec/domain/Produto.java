@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.serratec.dto.ProdutoDTO2;
+
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -44,15 +46,37 @@ public class Produto {
 	@Column(name = "valor_unitario", nullable = false)
 	private Double valorUnitario;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 
-	@OneToMany(mappedBy = "produto",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
 	private List<ItemPedido> listaItemPedido;
 
 	@OneToOne(mappedBy = "produto", cascade = CascadeType.ALL)
 	private Imagem imagem;
+
+	public Produto() {
+
+	}
+
+	public Produto(ProdutoDTO2 produto,Categoria categoria) {
+		this.nome = produto.getNome();
+		this.descricao = produto.getDescricao();
+		this.qtdEstoque = produto.getQtdEstoque();
+		this.dataCadastro = LocalDate.now();
+		this.valorUnitario = produto.getValorUnitario();
+		this.categoria = categoria;
+	}
+	
+	public Produto(ProdutoDTO2 produto,Long id) {
+		this.id = id;
+		this.nome = produto.getNome();
+		this.descricao = produto.getDescricao();
+		this.qtdEstoque = produto.getQtdEstoque();
+		this.valorUnitario = produto.getValorUnitario();
+		
+	}
 
 	public Long getId() {
 		return id;

@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.serratec.domain.Produto;
 import org.serratec.dto.ProdutoDTO;
+import org.serratec.dto.ProdutoDTO2;
 import org.serratec.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,17 +74,17 @@ public class ProdutoController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Produto> cadastrar(@Valid @RequestBody Produto produto) {
-		produto = produtoService.save(produto);
+	public ResponseEntity<ProdutoDTO> cadastrar(@Valid @RequestBody ProdutoDTO2 produto) {
+		ProdutoDTO produtoDTO = produtoService.save(produto);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
-				.buildAndExpand(produto.getId())
+				.buildAndExpand(produtoDTO.getIdProduto())	
 				.toUri();
-		return ResponseEntity.created(uri).body(produto);
+		return ResponseEntity.created(uri).body(produtoDTO);
 	}
 
-	@PutMapping("/{idProduto}")
+	@PutMapping("/atualizar/{idProduto}")
 	@ApiOperation(value = "Atualiza dados de um Produto", notes = "Atualizar Produto")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Produto Atualizado"),
@@ -92,13 +93,12 @@ public class ProdutoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Produto> salvar(@PathVariable Long idProduto, @Valid @RequestBody Produto produto) {
-		produto.setId(idProduto);
-		produto = produtoService.save(produto);
-		return ResponseEntity.ok(produto);
+	public ResponseEntity<ProdutoDTO> salvar(@PathVariable Long idProduto, @Valid @RequestBody ProdutoDTO2 produto) {
+		ProdutoDTO produtoMostrar = produtoService.salvar(idProduto, produto);
+		return ResponseEntity.ok(produtoMostrar);
 	}
 
-	@DeleteMapping("/{idProduto}")
+	@DeleteMapping("/deletar/{idProduto}")
 	@ApiOperation(value = "Remove um Produto", notes = "Remover Produto")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Produto Removido"),
