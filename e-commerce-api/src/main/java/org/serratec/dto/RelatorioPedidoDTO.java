@@ -37,6 +37,7 @@ public class RelatorioPedidoDTO {
 		List<ItemPedidoDTO3> listaItemPedidosDTO3 = new ArrayList<>();
 		for (ItemPedido itemPedido : listaItemPedidos) {
 			listaItemPedidosDTO3.add(new ItemPedidoDTO3(itemPedido));
+			
 		}
 		this.itens = listaItemPedidosDTO3;	
 		this.nomeCliente = pedido.getCliente().getNome();
