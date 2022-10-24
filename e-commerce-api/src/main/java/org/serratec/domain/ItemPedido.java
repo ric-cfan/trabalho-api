@@ -68,9 +68,9 @@ public class ItemPedido {
 
 	public ItemPedido(ItemPedidoDTO2 itemPedido, Produto produto) {
 		this.quantidade = itemPedido.getQuantidade();
-		this.percentualDesconto = itemPedido.getPercentualDesconto() / 100;
+		this.percentualDesconto = itemPedido.getPercentualDesconto();
 		this.valorBruto = produto.getValorUnitario();
-		this.valorLiquido = valorBruto * percentualDesconto;
+		this.valorLiquido = valorBruto * (1 - percentualDesconto/100);
 		this.precoVenda = valorLiquido * quantidade;
 		this.produto = produto;
 	}

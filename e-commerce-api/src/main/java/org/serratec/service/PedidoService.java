@@ -69,7 +69,7 @@ public class PedidoService {
     		Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
     		listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
     		
-    		valorTotal += produto.getValorUnitario() * itemPedidoDTO2.getPercentualDesconto() * itemPedidoDTO2.getQuantidade();
+    		valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto()/100) * itemPedidoDTO2.getQuantidade();
 		}
     	
     	Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);
@@ -95,7 +95,7 @@ public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
     		Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
     		listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
     		
-    		valorTotal += produto.getValorUnitario() * itemPedidoDTO2.getPercentualDesconto() * itemPedidoDTO2.getQuantidade();
+    		valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto()/100) * itemPedidoDTO2.getQuantidade();
 		}
     	
     	Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);

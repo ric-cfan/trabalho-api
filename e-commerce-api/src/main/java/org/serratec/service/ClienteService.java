@@ -38,9 +38,12 @@ public class ClienteService {
 		 return clientesDTO;
 	}
 
-	public Optional<ClienteDTO2> findById(Long idCliente) {
-        Optional<ClienteDTO2> cliente = Optional.ofNullable(new ClienteDTO2(clienteRepository.findById(idCliente).get()));
-        return cliente;
+	public ClienteDTO2 findById(Long idCliente) {
+		if(clienteRepository.findById(idCliente).isPresent()) {
+        ClienteDTO2 cliente = new ClienteDTO2(clienteRepository.findById(idCliente).get());
+        	return cliente;
+        }
+        return null;
     }
 
 	@Transactional
@@ -148,8 +151,14 @@ public class ClienteService {
 	
     }
     
-    public void deleteById(Long idCliente) {
-        clienteRepository.deleteById(idCliente);
+    public Boolean deleteById(Long idCliente) {
+    	if(clienteRepository.findById(idCliente).isPresent()) {
+    		clienteRepository.deleteById(idCliente);
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
 
 

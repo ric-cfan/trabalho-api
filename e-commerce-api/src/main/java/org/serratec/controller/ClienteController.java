@@ -60,11 +60,11 @@ public class ClienteController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<ClienteDTO2> buscarPorId(@PathVariable Long idCliente) {
-		Optional<ClienteDTO2> cliente = clienteService.findById(idCliente);
+		Optional<ClienteDTO2> cliente = Optional.ofNullable(clienteService.findById(idCliente));
 		if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get()); 
-            }
-            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -96,17 +96,20 @@ public class ClienteController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<ClienteDTO2> salvar(@PathVariable Long idCliente, @Valid @RequestBody ClienteDTO1 cliente) {
-		ClienteDTO2 clienteDTO2;
-		clienteDTO2 = clienteService.atualizar(cliente, idCliente);
-		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{idCliente}")
-				.buildAndExpand(clienteDTO2.getIdCliente())
-				.toUri();
-		return ResponseEntity.created(uri).body(clienteDTO2);
+		Optional<ClienteDTO2> clienteDTO2;
+		clienteDTO2 = Optional.ofNullable(clienteService.atualizar(cliente, idCliente));
+		if(clienteDTO2.isPresent()) {
+			URI uri = ServletUriComponentsBuilder
+					.fromCurrentRequest()
+					.path("/{idCliente}")
+					.buildAndExpand(clienteDTO2.get().getIdCliente())
+					.toUri();
+			return ResponseEntity.created(uri).body(clienteDTO2.get());
+		}
+		return ResponseEntity.notFound().build();
 	}
 	
-	@DeleteMapping("/deletar/{idCliente}")
+	@DeleteMapping("/{idCliente}")
 	@ApiOperation(value = "Remove um Cliente", notes = "Remover Cliente")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Cliente Removido"),
@@ -116,8 +119,11 @@ public class ClienteController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
     public ResponseEntity<Void> deletar(@PathVariable Long idCliente) {
-		clienteService.deleteById(idCliente);
-		return ResponseEntity.noContent().build();
+		Boolean idExiste = clienteService.deleteById(idCliente);
+		if(idExiste == true) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.notFound().build();
     }
 
 }

@@ -26,8 +26,13 @@ public class CategoriaService {
 	}
 	
     public CategoriaDTO findById(Long idCategoria) {
-    	CategoriaDTO categoriaDTO = new CategoriaDTO(categoriaRepository.findById(idCategoria).get());
-        return categoriaDTO;
+    	if(categoriaRepository.findById(idCategoria).isPresent()) {
+    		CategoriaDTO categoriaDTO = new CategoriaDTO(categoriaRepository.findById(idCategoria).get());
+    		return categoriaDTO;
+    	}
+    	else {
+    		return null;
+    	}
     }
 
     public CategoriaDTO save(CategoriaDTO2 categoria) {
