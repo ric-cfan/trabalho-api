@@ -2,6 +2,7 @@ package org.serratec.domain;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,14 +33,11 @@ public class Imagem {
 	@Column(name = "tipo")
 	private String tipo;
 
-	@Column(name = "url")
-	private String url;
-
 	@NotNull
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_produto", nullable = false)
 	private Produto produto;
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -79,14 +77,6 @@ public class Imagem {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	public Produto getProduto() {

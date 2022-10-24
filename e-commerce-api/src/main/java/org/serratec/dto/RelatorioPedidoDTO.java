@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.serratec.domain.Cliente;
 import org.serratec.domain.ItemPedido;
 import org.serratec.domain.Pedido;
 

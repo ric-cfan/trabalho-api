@@ -1,25 +1,31 @@
 package org.serratec.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.serratec.domain.Produto;
-import org.serratec.dto.ProdutoDTO;
+import org.serratec.domain.Imagem;
+import org.serratec.dto.ImagemProdutoDTO;
 import org.serratec.dto.ProdutoDTO2;
+import org.serratec.service.ImagemService;
 import org.serratec.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +40,9 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 	
+	@Autowired
+	private ImagemService imagemService;
+	
 	@GetMapping
 	@ApiOperation(value = "Retorna lista de Produtos", notes = "Listagem de Produtos")
 	@ApiResponses(value = {
@@ -43,7 +52,7 @@ public class ProdutoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<List<ProdutoDTO>> listar() {
+	public ResponseEntity<List<ImagemProdutoDTO>> listar() {
 		return ResponseEntity.ok(produtoService.listar());
 	}
 
@@ -56,8 +65,8 @@ public class ProdutoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<Produto> buscarPorId(@PathVariable Long idProduto) {
-		Optional<Produto> produto = produtoService.findById(idProduto);
+	public ResponseEntity<ImagemProdutoDTO> buscarPorId(@PathVariable Long idProduto) {
+		Optional<ImagemProdutoDTO> produto = produtoService.findById(idProduto);
 		if (produto.isPresent()) {
             return ResponseEntity.ok(produto.get()); 
             }
@@ -65,8 +74,28 @@ public class ProdutoController {
             return ResponseEntity.notFound().build();
 	}
 	
+    @GetMapping("/{idProduto}/imagem")
+	@ApiOperation(value = "Retorna um Produto", notes = "Produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna um Produto"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+	})
+	public ResponseEntity<byte[]> imagemPorId(@PathVariable Long idProduto) {
+		Optional<Imagem> imagem = imagemService.buscarPorIdProduto(idProduto);
+		if (imagem.isPresent()) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-type", imagem.get().getTipo());
+			headers.add("Content-length", String.valueOf(imagem.get().getDados().length));
+			return new ResponseEntity<byte[]>(imagem.get().getDados(), headers, HttpStatus.OK);
+            }
+            
+            return ResponseEntity.notFound().build();
+	}
 	
-	@PostMapping({"/cadastrar"})
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@ApiOperation(value = "Insere os dados de um produto", notes = "Inserir Produto")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Produto adcionado"),
@@ -74,8 +103,8 @@ public class ProdutoController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<ProdutoDTO> cadastrar(@Valid @RequestBody ProdutoDTO2 produto) {
-		ProdutoDTO produtoDTO = produtoService.save(produto);
+	public ResponseEntity<ImagemProdutoDTO> cadastrar(@Valid @RequestPart ProdutoDTO2 produto,@RequestPart MultipartFile file) throws IOException {
+		ImagemProdutoDTO produtoDTO = produtoService.inserir(produto,file);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
@@ -83,8 +112,8 @@ public class ProdutoController {
 				.toUri();
 		return ResponseEntity.created(uri).body(produtoDTO);
 	}
-
-	@PutMapping("/atualizar/{idProduto}")
+	
+	@PutMapping(path = "/{idProduto}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@ApiOperation(value = "Atualiza dados de um Produto", notes = "Atualizar Produto")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Produto Atualizado"),
@@ -93,11 +122,11 @@ public class ProdutoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<ProdutoDTO> salvar(@PathVariable Long idProduto, @Valid @RequestBody ProdutoDTO2 produto) {
-		ProdutoDTO produtoMostrar = produtoService.salvar(idProduto, produto);
+	public ResponseEntity<ImagemProdutoDTO> salvar(@PathVariable Long idProduto, @Valid @RequestPart ProdutoDTO2 produto,@RequestPart MultipartFile file) throws IOException {
+		ImagemProdutoDTO produtoMostrar = produtoService.atualizar(idProduto, produto, file);
 		return ResponseEntity.ok(produtoMostrar);
 	}
-
+	
 	@DeleteMapping("/deletar/{idProduto}")
 	@ApiOperation(value = "Remove um Produto", notes = "Remover Produto")
 	@ApiResponses(value = {

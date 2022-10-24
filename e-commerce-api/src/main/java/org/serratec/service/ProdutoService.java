@@ -1,59 +1,114 @@
 package org.serratec.service;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.serratec.domain.Categoria;
+import org.serratec.domain.Imagem;
 import org.serratec.domain.Produto;
-import org.serratec.dto.ProdutoDTO;
+import org.serratec.dto.ImagemProdutoDTO;
 import org.serratec.dto.ProdutoDTO2;
 import org.serratec.repository.CategoriaRepository;
 import org.serratec.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class ProdutoService {
-	
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-	
-	
-	public List<ProdutoDTO> listar(){
+
+
+	public List<ImagemProdutoDTO> listar() {
 		List<Produto> produtos = produtoRepository.findAll();
-		List<ProdutoDTO> produtosDTO = new ArrayList<>();
-		
+		List<ImagemProdutoDTO> produtosDTO = new ArrayList<>();
 		for (Produto produto : produtos) {
-			produtosDTO.add(new ProdutoDTO(produto));
+			URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/produto/{id}/imagem").buildAndExpand(produto.getId())
+					.toUri();
+			String url = uri.toString();
+			produtosDTO.add(new ImagemProdutoDTO(produto, url));
 		}
 		return produtosDTO;
 	}
-	
-	public Optional<Produto> findById(Long idProduto) {
-        return produtoRepository.findById(idProduto);
-    }
 
-    public ProdutoDTO save(ProdutoDTO2 produto) {
-       Categoria categoria = categoriaRepository.findById(produto.getIdCategoria()).get();
-       Produto produtoBanco = new Produto(produto,categoria);
-       produtoRepository.save(produtoBanco);
-       ProdutoDTO produtoDTO = new ProdutoDTO(produtoRepository.findById(produtoBanco.getId()).get());
-       return produtoDTO;
-    }
+	public Optional<ImagemProdutoDTO> findById(Long idProduto) {
+		ImagemProdutoDTO dto = new ImagemProdutoDTO(produtoRepository.findById(idProduto).get());
+		
+		if(Optional.ofNullable(dto).isPresent()) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/produto/{id}/imagem").buildAndExpand(dto.getIdProduto())
+				.toUri();
+		dto.setUrlImagem(uri.toString());
+		}
+		
+		return Optional.ofNullable(dto);
+	}
 
-    public ProdutoDTO salvar(Long idProduto,ProdutoDTO2 produto) {
-    	Categoria categoria = categoriaRepository.findById(produto.getIdCategoria()).get();
-    	Produto produtoBanco = new Produto(produto,categoria);
-    	produtoRepository.save(produtoBanco);
-    	ProdutoDTO produtoDTO = new ProdutoDTO(produtoRepository.findById(produtoBanco.getId()).get());
-    	return produtoDTO;
-    }
-    public void deleteById(Long idProduto) {
-        produtoRepository.deleteById(idProduto);
-    }
+	@Transactional
+	public ImagemProdutoDTO inserir(ProdutoDTO2 produto, MultipartFile file) throws IOException {
+		Categoria categoria = categoriaRepository.findById(produto.getIdCategoria()).get();
+		Produto produtoBanco = new Produto(produto, categoria);
+
+		Imagem imagem = new Imagem();
+		imagem.setTipo(file.getContentType());
+		imagem.setDados(file.getBytes());
+			
+		imagem.setProduto(produtoBanco);
+		produtoBanco.setImagem(imagem);
+		produtoBanco = produtoRepository.saveAndFlush(produtoBanco);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/produto/{id}/imagem").buildAndExpand(imagem.getProduto().getId())
+				.toUri();
+		ImagemProdutoDTO dto = new ImagemProdutoDTO(produtoBanco);
+		dto.setUrlImagem(uri.toString());
+		
+		return dto;
+	}
+
+	@Transactional
+	public ImagemProdutoDTO atualizar(Long idProduto, ProdutoDTO2 produto, MultipartFile file) throws IOException {
+		Optional<Categoria> categoria = categoriaRepository.findById(produto.getIdCategoria());
+		Produto produtoAtualizado = new Produto(produto, categoria.get());
+		Produto produtoSalvo = produtoRepository.findById(idProduto).get();
+		if(Optional.ofNullable(produtoSalvo).isPresent()) {
+			produtoAtualizado.setId(idProduto);
+		}
+		else {
+			return null;
+		}
+		
+		Imagem imagem = new Imagem();
+		imagem.setTipo(file.getContentType());
+		imagem.setProduto(produtoAtualizado);
+		imagem.setDados(file.getBytes());
+		
+		if(Optional.ofNullable(produtoSalvo.getImagem()).isPresent()) {
+				imagem.setId(Optional.ofNullable(produtoSalvo.getImagem().getId()).get());
+		}
 	
+		produtoAtualizado.setImagem(imagem);
+		produtoAtualizado = produtoRepository.save(produtoAtualizado);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/produto/{id}/imagem").buildAndExpand(produtoAtualizado.getId())
+				.toUri();
+		ImagemProdutoDTO dto = new ImagemProdutoDTO(produtoAtualizado);
+		dto.setUrlImagem(uri.toString());
+		
+		return dto;
+	}
+
+	@Transactional
+	public void deleteById(Long idProduto) {
+		produtoRepository.deleteById(idProduto);
+	}
+
 }
