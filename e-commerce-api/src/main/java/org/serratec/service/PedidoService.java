@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.config.MailConfig;
 import org.serratec.domain.Cliente;
 import org.serratec.domain.ItemPedido;
 import org.serratec.domain.Pedido;
@@ -11,6 +12,7 @@ import org.serratec.domain.Produto;
 import org.serratec.dto.ItemPedidoDTO2;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
+import org.serratec.dto.RelatorioPedidoDTO;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
@@ -28,6 +30,10 @@ public class PedidoService {
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	@Autowired
+	private MailConfig mailConfig;
+	
 
 	public List<PedidoDTO> listarTodos() {
 		List<Pedido> pedidos = pedidoRepository.findAll();
@@ -65,7 +71,9 @@ public class PedidoService {
     	Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
     	
     	PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
-
+    	RelatorioPedidoDTO relatorioPedidoDTO = new RelatorioPedidoDTO(pedidoSalvo);
+	
+		mailConfig.sendMailPedido(relatorioPedidoDTO);
         return pedidoDTO;
     }
     
