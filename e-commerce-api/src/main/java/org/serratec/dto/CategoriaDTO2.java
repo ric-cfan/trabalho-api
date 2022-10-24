@@ -1,9 +1,12 @@
 package org.serratec.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import org.serratec.domain.Categoria;
 
 public class CategoriaDTO2 {
 
+	@NotBlank
 	private String nome;
 	private String descricao;
 

@@ -9,6 +9,8 @@ import org.serratec.domain.Endereco;
 import org.serratec.dto.ClienteDTO1;
 import org.serratec.dto.ClienteDTO2;
 import org.serratec.dto.EnderecoViaCepDTO;
+import org.serratec.exception.CpfException;
+import org.serratec.exception.EmailException;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,18 @@ public class ClienteService {
     }
 
 	@Transactional
-    public ClienteDTO2 cadastrar(ClienteDTO1 cliente) {
+    public ClienteDTO2 cadastrar(ClienteDTO1 cliente) throws EmailException, CpfException {
+		Cliente clienteValidaEmail = clienteRepository.findByEmail(cliente.getEmail());
+		Cliente clienteValidaCpf = clienteRepository.findByCpf(cliente.getCpf());
+
+		if (clienteValidaCpf != null) {
+			throw new CpfException("Já existe um cliente com o cpf " + cliente.getCpf());
+		}
+
+		if (clienteValidaEmail != null) {
+			throw new EmailException("Já existe um cliente com o e-mail " + cliente.getEmail());
+		}
+		
     	Optional<Endereco> endereco = Optional.ofNullable(enderecoRepository.findByCep(cliente.getCep()));
 		if (endereco.isPresent()) {
 			

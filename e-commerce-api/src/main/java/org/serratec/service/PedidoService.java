@@ -1,5 +1,6 @@
 package org.serratec.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.serratec.dto.ItemPedidoDTO2;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
 import org.serratec.dto.RelatorioPedidoDTO;
+import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
@@ -51,7 +53,10 @@ public class PedidoService {
         return Optional.ofNullable(pedidoDTO);
     }
 
-    public PedidoDTO cadastrar(PedidoDTO2 pedido) {
+    public PedidoDTO cadastrar(PedidoDTO2 pedido) throws DataPedidoAnteriorException {
+		if (pedido.getDataPedido().isBefore(LocalDate.now())) {
+			throw new DataPedidoAnteriorException();
+		}
     	
     	Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
     	

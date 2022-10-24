@@ -2,11 +2,17 @@ package org.serratec.dto;
 
 import java.util.Objects;
 
+import javax.validation.constraints.NotBlank;
+
 import org.serratec.domain.Categoria;
 
 public class CategoriaDTO {
+
 	private Long idCategoria;
+
+	@NotBlank
 	private String nome;
+
 	private String descricao;
 	
 	public CategoriaDTO() {

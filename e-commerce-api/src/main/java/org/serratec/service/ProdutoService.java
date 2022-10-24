@@ -11,6 +11,7 @@ import org.serratec.domain.Imagem;
 import org.serratec.domain.Produto;
 import org.serratec.dto.ImagemProdutoDTO;
 import org.serratec.dto.ProdutoDTO2;
+import org.serratec.exception.DescricaoProdutoException;
 import org.serratec.repository.CategoriaRepository;
 import org.serratec.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,12 @@ public class ProdutoService {
 	}
 
 	@Transactional
-	public ImagemProdutoDTO inserir(ProdutoDTO2 produto, MultipartFile file) throws IOException {
+	public ImagemProdutoDTO inserir(ProdutoDTO2 produto, MultipartFile file) throws IOException, DescricaoProdutoException {
+		Produto descricaoValida = produtoRepository.findByDescricao(produto.getDescricao());
+		
+		if (descricaoValida != null) {
+			throw new DescricaoProdutoException("Já existe um produto com está descrição " + produto.getDescricao());
+		}
 		Categoria categoria = categoriaRepository.findById(produto.getIdCategoria()).get();
 		Produto produtoBanco = new Produto(produto, categoria);
 

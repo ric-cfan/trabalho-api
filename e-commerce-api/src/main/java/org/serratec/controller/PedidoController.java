@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
+import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class PedidoController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<PedidoDTO> cadastrar(@Valid @RequestBody PedidoDTO2 pedido) {
+	public ResponseEntity<PedidoDTO> cadastrar(@Valid @RequestBody PedidoDTO2 pedido) throws DataPedidoAnteriorException {
 		PedidoDTO pedidoDTO = pedidoService.cadastrar(pedido);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
