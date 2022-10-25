@@ -29,11 +29,11 @@ public class UsuarioController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UsuarioInserirDTO> inserir(@RequestBody UsuarioInserirDTO usuario,Usuario idUsuario) {
+	public ResponseEntity<UsuarioDTO> inserir(@RequestBody UsuarioInserirDTO usuario,Usuario idUsuario) {
 		UsuarioDTO usuarioCadastro = usuarioService.inserir(usuario);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUsuario.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(usuario);
+		return ResponseEntity.created(uri).body(usuarioCadastro);
 	}
 
 }

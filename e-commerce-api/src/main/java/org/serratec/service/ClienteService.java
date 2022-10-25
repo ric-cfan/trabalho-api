@@ -154,6 +154,7 @@ public class ClienteService {
 
 	}
 
+	@Transactional
 	public void deleteById(Long idCliente) {
 		if (!clienteRepository.existsById(idCliente)) {
 			throw new NotFoundException("Cliente não encontrado!");

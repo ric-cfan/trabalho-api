@@ -123,7 +123,7 @@ public class ProdutoController {
 		return ResponseEntity.ok(produtoMostrar);
 	}
 	
-	@DeleteMapping("/deletar/{idProduto}")
+	@DeleteMapping("/{idProduto}")
 	@ApiOperation(value = "Remove um Produto", notes = "Remover Produto")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Produto Removido"),

@@ -10,6 +10,7 @@ import org.serratec.exception.NotFoundException;
 import org.serratec.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoriaService {
@@ -34,6 +35,7 @@ public class CategoriaService {
 			throw new NotFoundException("Categoria não encontrada!");
 	}
 
+	@Transactional
 	public CategoriaDTO save(CategoriaDTO2 categoria) {
 		Categoria categoriaBanco = new Categoria(categoria);
 		categoriaRepository.save(categoriaBanco);
@@ -41,7 +43,8 @@ public class CategoriaService {
 		return categoriaDTO;
 	}
 
-	public CategoriaDTO salvar(Long idCategoria, CategoriaDTO2 categoria) {
+	@Transactional
+	public CategoriaDTO atualizar(Long idCategoria, CategoriaDTO2 categoria) {
 		if (categoriaRepository.existsById(idCategoria)) {
 			Categoria categoriaBanco = new Categoria(categoria, idCategoria);
 			categoriaRepository.save(categoriaBanco);
@@ -51,6 +54,7 @@ public class CategoriaService {
 		throw new NotFoundException("Categoria não encontrada!");
 	}
 
+	@Transactional
 	public void deleteById(Long idCategoria) {
 		if (!categoriaRepository.existsById(idCategoria)) {
 			throw new NotFoundException("Categoria não encontrada!");

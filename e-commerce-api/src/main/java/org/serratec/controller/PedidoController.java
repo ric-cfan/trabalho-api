@@ -56,7 +56,7 @@ public class PedidoController {
 		return ResponseEntity.ok(pedido);
 	}
 
-	@PostMapping({ "/cadastrar" })
+	@PostMapping
 	@ApiOperation(value = "Insere os dados de um pedido", notes = "Inserir Pedido")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Pedido adcionado"),

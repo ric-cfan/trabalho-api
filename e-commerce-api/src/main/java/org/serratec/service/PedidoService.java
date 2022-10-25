@@ -21,6 +21,7 @@ import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PedidoService {
@@ -57,6 +58,7 @@ public class PedidoService {
 		
 	}
 
+	@Transactional
 	public PedidoDTO cadastrar(PedidoDTO2 pedido) throws DataPedidoAnteriorException {
 		if (pedido.getDataPedido().isBefore(LocalDate.now())) {
 			throw new DataPedidoAnteriorException();
@@ -72,7 +74,11 @@ public class PedidoService {
 
 			Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
 			listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
-
+			
+			if (produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade() < 0) { //Calculo do estoque pos venda, checa se ainda e maior que 0
+				return null; //EXCEPTION VEM AQUI
+			}
+			
 			valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
 					* itemPedidoDTO2.getQuantidade();
 		}
@@ -92,6 +98,7 @@ public class PedidoService {
         return pedidoDTO;
     }
 
+	@Transactional
 	public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
 
 		if (!pedidoRepository.existsById(idPedido)) {
@@ -108,6 +115,15 @@ public class PedidoService {
 				Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
 				listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
 
+				Integer estoquePosVenda = produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade();
+				if (estoquePosVenda < 0) {
+					return null; //EXCEPTION VEM AQUI
+				}
+				if (pedido.getStatus().equals("P")) {
+					produto.setQtdEstoque(estoquePosVenda);
+					produtoRepository.save(produto); 
+				}
+				
 				valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
 						* itemPedidoDTO2.getQuantidade();
 			}
@@ -121,6 +137,7 @@ public class PedidoService {
 			return pedidoDTO;
 		}
 
+	@Transactional
 	public void deleteById(Long idPedido) {
 		if(!pedidoRepository.existsById(idPedido)) {
 			throw new NotFoundException("Pedido não encontrado!");

@@ -56,7 +56,7 @@ public class CategoriaController {
             
 	}
 	
-	@PostMapping({"/cadastrar"})
+	@PostMapping
 	@ApiOperation(value = "Insere os dados de uma Categoria", notes = "Inserir Categoria")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Categoria adicionada"),
@@ -74,7 +74,7 @@ public class CategoriaController {
 		return ResponseEntity.created(uri).body(categoriaDTO);
 	}
 	
-	@PutMapping("/atualizar/{idCategoria}")
+	@PutMapping("/{idCategoria}")
 	@ApiOperation(value = "Atualiza dados de uma Categoria", notes = "Atualizar Categoria")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Categoria Atualizada"),
@@ -83,12 +83,12 @@ public class CategoriaController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<CategoriaDTO> salvar(@PathVariable Long idCategoria, @Valid @RequestBody CategoriaDTO2 categoria) {
-		CategoriaDTO categoriaMostrar = categoriaService.salvar(idCategoria,categoria);
+	public ResponseEntity<CategoriaDTO> atualizar(@PathVariable Long idCategoria, @Valid @RequestBody CategoriaDTO2 categoria) {
+		CategoriaDTO categoriaMostrar = categoriaService.atualizar(idCategoria,categoria);
 		return ResponseEntity.ok(categoriaMostrar);
 	}
 	
-	@DeleteMapping("/deletar/{idCategoria}")
+	@DeleteMapping("/{idCategoria}")
 	@ApiOperation(value = "Remove uma Categoria", notes = "Remover Categoria")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Categoria Removida"),

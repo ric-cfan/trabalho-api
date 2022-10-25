@@ -51,7 +51,7 @@ public class ClienteController {
 		}
 		return ResponseEntity.ok(clientes);
 	}
-dddd
+
 	@GetMapping("/{idCliente}")
 	@ApiOperation(value = "Retorna uma Cliente", notes = "Cliente")
 	@ApiResponses(value = {

@@ -17,6 +17,7 @@ import org.serratec.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioService {
@@ -39,6 +40,7 @@ public class UsuarioService {
 		return usuarioDTOs;
 	}
 
+	@Transactional
 	public UsuarioDTO inserir(UsuarioInserirDTO user) throws EmailException {
 		if (!user.getSenha().equalsIgnoreCase(user.getConfirmaSenha())) {
 			throw new SenhaException("Senha e Confirma Senha não são iguais");
