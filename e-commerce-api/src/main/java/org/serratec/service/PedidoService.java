@@ -3,8 +3,6 @@ package org.serratec.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.serratec.config.MailConfig;
 import org.serratec.domain.Cliente;
 import org.serratec.domain.ItemPedido;
@@ -15,6 +13,7 @@ import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
 import org.serratec.dto.RelatorioPedidoDTO;
 import org.serratec.exception.DataPedidoAnteriorException;
+import org.serratec.exception.NotFoundException;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
@@ -26,16 +25,15 @@ public class PedidoService {
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
-	
+
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	private MailConfig mailConfig;
-	
 
 	public List<PedidoDTO> listarTodos() {
 		List<Pedido> pedidos = pedidoRepository.findAll();
@@ -47,68 +45,79 @@ public class PedidoService {
 		}
 		return pedidosDTO;
 	}
-	
-	public Optional<PedidoDTO> findById(Long idPedido) {
-		PedidoDTO pedidoDTO = new PedidoDTO(pedidoRepository.findById(idPedido).get());
-        return Optional.ofNullable(pedidoDTO);
-    }
 
-    public PedidoDTO cadastrar(PedidoDTO2 pedido) throws DataPedidoAnteriorException {
+	public PedidoDTO findById(Long idPedido) {
+		if (!pedidoRepository.findById(idPedido).isPresent()) {
+			throw new NotFoundException("Pedido não encontrado!");
+		}
+		PedidoDTO pedidoDTO = new PedidoDTO(pedidoRepository.findById(idPedido).get());
+		return pedidoDTO;
+		
+	}
+
+	public PedidoDTO cadastrar(PedidoDTO2 pedido) throws DataPedidoAnteriorException {
 		if (pedido.getDataPedido().isBefore(LocalDate.now())) {
 			throw new DataPedidoAnteriorException();
 		}
-    	
-    	Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
-    	
-    	List<ItemPedido> listaItemPedido = new ArrayList<>();
-    	List<ItemPedidoDTO2> listaItemPedidoDTO = new ArrayList<ItemPedidoDTO2>(pedido.getItens());
-    	Double valorTotal = 0.;
-    	
-    	for (ItemPedidoDTO2 itemPedidoDTO2 : listaItemPedidoDTO) {
-    		
-    		Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
-    		listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
-    		
-    		valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto()/100) * itemPedidoDTO2.getQuantidade();
+
+		Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
+
+		List<ItemPedido> listaItemPedido = new ArrayList<>();
+		List<ItemPedidoDTO2> listaItemPedidoDTO = new ArrayList<ItemPedidoDTO2>(pedido.getItens());
+		Double valorTotal = 0.;
+
+		for (ItemPedidoDTO2 itemPedidoDTO2 : listaItemPedidoDTO) {
+
+			Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
+			listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
+
+			valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
+					* itemPedidoDTO2.getQuantidade();
 		}
-    	
-    	Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);
-    	Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
-    	
-    	PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
-    	RelatorioPedidoDTO relatorioPedidoDTO = new RelatorioPedidoDTO(pedidoSalvo);
-	
+
+		Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);
+		Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
+
+		PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
+		RelatorioPedidoDTO relatorioPedidoDTO = new RelatorioPedidoDTO(pedidoSalvo);
+
 		mailConfig.sendMailPedido(relatorioPedidoDTO);
-        return pedidoDTO;
-    }
-    
-public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
-    	
-    	Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
-    	
-    	List<ItemPedido> listaItemPedido = new ArrayList<>();
-    	List<ItemPedidoDTO2> listaItemPedidoDTO = new ArrayList<ItemPedidoDTO2>(pedido.getItens());
-    	Double valorTotal = 0.;
-    	
-    	for (ItemPedidoDTO2 itemPedidoDTO2 : listaItemPedidoDTO) {
-    		
-    		Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
-    		listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
-    		
-    		valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto()/100) * itemPedidoDTO2.getQuantidade();
+		return pedidoDTO;
+	}
+
+	public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
+
+		if (!pedidoRepository.existsById(idPedido)) {
+			throw new NotFoundException("Pedido não encontrado!");
 		}
-    	
-    	Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);
-    	pedidoBanco.setId(idPedido);
-    	Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
-    	
-    	PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
+			Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
 
-        return pedidoDTO;
-    }
+			List<ItemPedido> listaItemPedido = new ArrayList<>();
+			List<ItemPedidoDTO2> listaItemPedidoDTO = new ArrayList<ItemPedidoDTO2>(pedido.getItens());
+			Double valorTotal = 0.;
 
+			for (ItemPedidoDTO2 itemPedidoDTO2 : listaItemPedidoDTO) {
 
-    public void deleteById(Long idPedido) {
-        pedidoRepository.deleteById(idPedido);
-    }
+				Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
+				listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
+
+				valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
+						* itemPedidoDTO2.getQuantidade();
+			}
+
+			Pedido pedidoBanco = new Pedido(pedido, valorTotal, cliente, listaItemPedido);
+			pedidoBanco.setId(idPedido);
+			Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
+
+			PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
+
+			return pedidoDTO;
+		}
+
+	public void deleteById(Long idPedido) {
+		if(!pedidoRepository.existsById(idPedido)) {
+			throw new NotFoundException("Pedido não encontrado!");
+		}
+		pedidoRepository.deleteById(idPedido);
+	}
 }

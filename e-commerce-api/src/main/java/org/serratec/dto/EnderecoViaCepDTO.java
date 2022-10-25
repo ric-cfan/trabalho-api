@@ -2,18 +2,26 @@ package org.serratec.dto;
 
 import org.serratec.domain.Endereco;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class EnderecoViaCepDTO {
 
+	@ApiModelProperty(value="Rua do endereço")
 	private String logradouro;
 
+	@ApiModelProperty(value="Bairro do endereço")
 	private String bairro;
 
+	@ApiModelProperty(value="Complemento do endereço")
 	private String complemento;
 
+	@ApiModelProperty(value="Cidade do endereço")
 	private String localidade;
 
+	@ApiModelProperty(value="Estado do endereço")
 	private String uf;
 
+	@ApiModelProperty(value="Cep do endereço")
 	private String cep;
 	
 	public EnderecoViaCepDTO() {

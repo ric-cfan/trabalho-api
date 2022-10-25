@@ -6,13 +6,18 @@ import javax.validation.constraints.NotBlank;
 
 import org.serratec.domain.Categoria;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class CategoriaDTO {
 
+	@ApiModelProperty(value="Identificador único da categoria")
 	private Long idCategoria;
 
 	@NotBlank
+	@ApiModelProperty(value="Nome da categoria")
 	private String nome;
 
+	@ApiModelProperty(value="Descrição da categoria")
 	private String descricao;
 	
 	public CategoriaDTO() {

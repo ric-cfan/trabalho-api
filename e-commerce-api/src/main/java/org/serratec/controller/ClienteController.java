@@ -2,10 +2,7 @@ package org.serratec.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-
 import javax.validation.Valid;
-
 import org.serratec.dto.ClienteDTO1;
 import org.serratec.dto.ClienteDTO2;
 import org.serratec.service.ClienteService;
@@ -20,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 
 @RestController
 @RequestMapping("/api/cliente")
@@ -32,7 +27,7 @@ public class ClienteController {
 
 	@Autowired
 	ClienteService clienteService;
-	
+
 	@GetMapping
 	@ApiOperation(value = "Retorna lista de Clientes", notes = "Listagem de Clientes")
 	@ApiResponses(value = {
@@ -49,7 +44,7 @@ public class ClienteController {
 		}
 		return ResponseEntity.ok(clientes);
 	}
-	
+
 	@GetMapping("/{idCliente}")
 	@ApiOperation(value = "Retorna uma Cliente", notes = "Cliente")
 	@ApiResponses(value = {
@@ -60,13 +55,11 @@ public class ClienteController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<ClienteDTO2> buscarPorId(@PathVariable Long idCliente) {
-		Optional<ClienteDTO2> cliente = Optional.ofNullable(clienteService.findById(idCliente));
-		if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente.get()); 
-        }
-        return ResponseEntity.notFound().build();
+		ClienteDTO2 cliente = clienteService.findById(idCliente);
+		return ResponseEntity.ok(cliente);
+
 	}
-	
+
 	@PostMapping
 	@ApiOperation(value = "Insere os dados de um Cliente", notes = "Inserir Cliente")
 	@ApiResponses(value = {
@@ -85,7 +78,7 @@ public class ClienteController {
 				.toUri();
 		return ResponseEntity.created(uri).body(clienteDTO2);
 	}
-					
+
 	@PutMapping("/{idCliente}")
 	@ApiOperation(value = "Atualiza dados de um Cliente", notes = "Atualizar Cliente")
 	@ApiResponses(value = {
@@ -96,19 +89,10 @@ public class ClienteController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<ClienteDTO2> salvar(@PathVariable Long idCliente, @Valid @RequestBody ClienteDTO1 cliente) {
-		Optional<ClienteDTO2> clienteDTO2;
-		clienteDTO2 = Optional.ofNullable(clienteService.atualizar(cliente, idCliente));
-		if(clienteDTO2.isPresent()) {
-			URI uri = ServletUriComponentsBuilder
-					.fromCurrentRequest()
-					.path("/{idCliente}")
-					.buildAndExpand(clienteDTO2.get().getIdCliente())
-					.toUri();
-			return ResponseEntity.created(uri).body(clienteDTO2.get());
-		}
-		return ResponseEntity.notFound().build();
+		ClienteDTO2 clienteDTO2 = clienteService.atualizar(cliente, idCliente);
+		return ResponseEntity.ok(clienteDTO2);
 	}
-	
+
 	@DeleteMapping("/{idCliente}")
 	@ApiOperation(value = "Remove um Cliente", notes = "Remover Cliente")
 	@ApiResponses(value = {
@@ -118,12 +102,10 @@ public class ClienteController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-    public ResponseEntity<Void> deletar(@PathVariable Long idCliente) {
-		Boolean idExiste = clienteService.deleteById(idCliente);
-		if(idExiste == true) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.notFound().build();
-    }
+	public ResponseEntity<Void> deletar(@PathVariable Long idCliente) {
+		clienteService.deleteById(idCliente);
+		return ResponseEntity.noContent().build();
+
+	}
 
 }
