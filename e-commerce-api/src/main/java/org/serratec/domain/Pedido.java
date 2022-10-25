@@ -22,6 +22,8 @@ import org.serratec.dto.RelatorioPedidoDTO;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "pedido")
 public class Pedido {

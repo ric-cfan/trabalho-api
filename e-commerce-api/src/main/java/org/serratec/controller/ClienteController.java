@@ -8,6 +8,8 @@ import org.serratec.dto.ClienteDTO2;
 import org.serratec.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,11 @@ public class ClienteController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<List<ClienteDTO2>> buscaTodos() {
+		
+		// SPRING security
+		UserDetails details = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println("Login do usuario SecurityContextHolder: " + details.getUsername());
+
 		List<ClienteDTO2> clientes = clienteService.buscaTodos();
 		if (clientes.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -57,7 +64,7 @@ public class ClienteController {
 	public ResponseEntity<ClienteDTO2> buscarPorId(@PathVariable Long idCliente) {
 		ClienteDTO2 cliente = clienteService.findById(idCliente);
 		return ResponseEntity.ok(cliente);
-
+    
 	}
 
 	@PostMapping
