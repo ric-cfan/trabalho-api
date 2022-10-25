@@ -33,33 +33,35 @@ public class ConfigSeguranca extends WebSecurityConfigurerAdapter {
 		.passwordEncoder(bCryptPasswordEncoder());
 	}
 	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("teste").password("{noop}12345").roles("ADMIN")
-		.and()
-		.withUser("teste2").password("{noop}12345").roles("USER","ADMIN");
-	}
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication().withUser("teste").password("{noop}12345").roles("ADMIN")
+//		.and()
+//		.withUser("teste2").password("{noop}12345").roles("USER","ADMIN");
+//	}
 		
 	@Override
 	protected void configure(HttpSecurity http)throws Exception{
 		http.csrf().disable().authorizeHttpRequests()
+		
+		.antMatchers("/swagger-ui/**", "/login/**").permitAll()
 		.antMatchers(HttpMethod.GET,"/api/produto/**","/api/categoria/**").permitAll()
-		.antMatchers(HttpMethod.POST,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","api/usuario/**","/api/endereco/**").hasAuthority("ADMIN")
-		.antMatchers(HttpMethod.DELETE,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","api/usuario/**","/api/endereco/**").hasAuthority("ADMIN")
-		.antMatchers(HttpMethod.PUT,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","api/usuario/**","/api/endereco/**").hasAuthority("ADMIN")
-		.antMatchers(HttpMethod.GET,"/api/cliente/**","api/usuario/**","/api/endereco/**","/api/pedido/**").hasAnyAuthority("ADMIN","USER")
-		.antMatchers(HttpMethod.GET,"/api/endereco/**").hasAnyAuthority("ADMIN","USER")
-		.antMatchers(HttpMethod.GET, "api/usuario/**").hasAnyAuthority("ADMIN","USER")
-		.antMatchers(HttpMethod.POST, "/usuario").hasAuthority("ADMIN")
-		.antMatchers(HttpMethod.GET,"/api/pedido/**").hasAuthority("ADMIN")
+		
+		.and()
+		.authorizeHttpRequests()
+		.antMatchers(HttpMethod.POST,"/api/usuario/**", "/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**").hasAuthority("ADMIN")
+		.antMatchers(HttpMethod.DELETE,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","/api/usuario/**").hasAuthority("ADMIN")
+		.antMatchers(HttpMethod.PUT,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","/api/usuario/**").hasAuthority("ADMIN")
+		
+		.antMatchers(HttpMethod.GET, "/api/cliente/**","/api/pedido/**","/api/usuario/**").hasAnyAuthority("ADMIN","USER")
+
 		.anyRequest().authenticated()
 		.and()
 		.httpBasic()
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
-		.cors()
-		.and();
+		.cors();
 		http.addFilter(new JwtAuthenticationFilter(this.authenticationManager(), jwtUtil));
 		http.addFilter(new JwtAuthorizationFilter(this.authenticationManager(), jwtUtil, userDetailsService));
 	}

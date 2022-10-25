@@ -22,7 +22,7 @@ public class UsuarioDetalhe implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfis()) {
-			authorities.add(new SimpleGrantedAuthority(usuarioPerfil.getId().getUsuario().getNome()));
+			authorities.add(new SimpleGrantedAuthority(usuarioPerfil.getId().getPerfil().getTipo()));
 		}
 		return authorities;
 	}
