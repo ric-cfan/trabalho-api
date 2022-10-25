@@ -3,7 +3,7 @@ package org.serratec.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 import org.serratec.config.MailConfig;
 import org.serratec.domain.Cliente;
 import org.serratec.domain.ItemPedido;
@@ -17,6 +17,7 @@ import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.exception.EmailException;
 import org.serratec.exception.EstoqueInsuficienteException;
 import org.serratec.exception.NotFoundErroException;
+import org.serratec.exception.StatusException;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
@@ -56,7 +57,7 @@ public class PedidoService {
 		}
 		PedidoDTO pedidoDTO = new PedidoDTO(pedidoRepository.findById(idPedido).get());
 		return pedidoDTO;
-		
+
 	}
 
 	@Transactional
@@ -64,7 +65,9 @@ public class PedidoService {
 		if (pedido.getDataPedido().isBefore(LocalDate.now())) {
 			throw new DataPedidoAnteriorException();
 		}
-
+		if(!pedido.getStatus().equals("P") || !pedido.getStatus().equals("F")) {
+			throw new StatusException("Status deverá ser 'P'(Pendente) ou 'F'(Finalizado).");
+		}
 		Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
 
 		List<ItemPedido> listaItemPedido = new ArrayList<>();
@@ -75,11 +78,15 @@ public class PedidoService {
 
 			Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
 			listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
-			
-			if (produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade() < 0) { //Calculo do estoque pos venda, checa se ainda e maior que 0
+
+			if (produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade() < 0) { // Calculo do estoque pos venda, checa
+																				// se ainda e maior que 0
 				throw new EstoqueInsuficienteException("Estoque Insuficiente!");
 			}
-			
+			if (pedido.getStatus().equals("F")) {
+				produto.setQtdEstoque(produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade());
+			}
+
 			valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
 					* itemPedidoDTO2.getQuantidade();
 		}
@@ -88,16 +95,15 @@ public class PedidoService {
 		Pedido pedidoSalvo = pedidoRepository.save(pedidoBanco);
 
 		PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
-    	RelatorioPedidoDTO relatorioPedidoDTO = new RelatorioPedidoDTO(pedidoSalvo);
+		RelatorioPedidoDTO relatorioPedidoDTO = new RelatorioPedidoDTO(pedidoSalvo);
 
-		mailConfig.sendMailPedido(relatorioPedidoDTO);
-    	try {
-    		mailConfig.sendMailPedido(relatorioPedidoDTO);
+		try {
+			mailConfig.sendMailPedido(relatorioPedidoDTO);
 		} catch (Exception e) {
 			throw new EmailException("Houve um erro no envio do email, favor verificar se o email está correto.");
 		}
-        return pedidoDTO;
-    }
+		return pedidoDTO;
+	}
 
 	@Transactional
 	public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
@@ -105,12 +111,18 @@ public class PedidoService {
 		if (!pedidoRepository.existsById(idPedido)) {
 			throw new NotFoundErroException("Pedido não encontrado!");
 		}
+		if (pedido.getStatus().equals("F")) {
+			throw new StatusException("Este pedido já foi finalizado e não poderá ser alterado.");
+		} 
+			if(!pedido.getStatus().equals("P")) {
+				throw new StatusException("Status deverá ser 'P'(Pendente) ou 'F'(Finalizado).");
+			}
 			Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
 
 			List<ItemPedido> listaItemPedido = new ArrayList<>();
 			List<ItemPedidoDTO2> listaItemPedidoDTO = new ArrayList<ItemPedidoDTO2>(pedido.getItens());
 			Double valorTotal = 0.;
-
+			
 			for (ItemPedidoDTO2 itemPedidoDTO2 : listaItemPedidoDTO) {
 
 				Produto produto = produtoRepository.findById(itemPedidoDTO2.getIdProduto()).get();
@@ -120,9 +132,9 @@ public class PedidoService {
 				if (estoquePosVenda < 0) {
 					throw new EstoqueInsuficienteException("Estoque Insuficiente!");
 				}
-				if (pedido.getStatus().equals("P")) {
+				if (pedido.getStatus().equals("F")) {
 					produto.setQtdEstoque(estoquePosVenda);
-					produtoRepository.save(produto); 
+					produtoRepository.save(produto);
 				}
 				
 				valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
@@ -136,11 +148,12 @@ public class PedidoService {
 			PedidoDTO pedidoDTO = new PedidoDTO(pedidoSalvo);
 
 			return pedidoDTO;
-		}
+		
+	}
 
 	@Transactional
 	public void deleteById(Long idPedido) {
-		if(!pedidoRepository.existsById(idPedido)) {
+		if (!pedidoRepository.existsById(idPedido)) {
 			throw new NotFoundErroException("Pedido não encontrado!");
 		}
 		pedidoRepository.deleteById(idPedido);
