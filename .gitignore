@@ -3,3 +3,7 @@
 e-commerce-api/src/main/resources/application.properties
 e-commerce-api/src/main/resources/application.properties
 e-commerce-api/src/main/resources/application.properties
+e-commerce-api/src/main/resources/application.properties
+*.properties
+e-commerce-api/src/main/resources/application.properties
+*.properties
