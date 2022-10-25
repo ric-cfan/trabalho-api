@@ -13,9 +13,11 @@ import org.serratec.domain.Usuario;
 @Embeddable
 public class UsuarioPerfilPK implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	@ManyToOne
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_perfil")
 	private Perfil perfil;

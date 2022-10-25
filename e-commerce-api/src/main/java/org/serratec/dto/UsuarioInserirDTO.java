@@ -2,19 +2,35 @@ package org.serratec.dto;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+
 import org.serratec.domain.Perfil;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class UsuarioInserirDTO {
+
+	@NotBlank
+	@ApiModelProperty(value="Nome do usuário")
 	private String nome;
+
+	@NotBlank
+	@ApiModelProperty(value="Email do usuário")
 	private String email;
+
+	@NotBlank
+	@ApiModelProperty(value="Senha do usuário")
 	private String senha;
+
+	@NotBlank
+	@ApiModelProperty(value="Confirmação de senha do usuário")
 	private String confirmaSenha;
+
 	private Set<Perfil> perfis;
 
 	public UsuarioInserirDTO() {
 
 	}
-
 
 	public String getNome() {
 		return nome;

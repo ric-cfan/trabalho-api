@@ -6,7 +6,7 @@ import java.util.List;
 import org.serratec.domain.Categoria;
 import org.serratec.dto.CategoriaDTO;
 import org.serratec.dto.CategoriaDTO2;
-import org.serratec.exception.NotFoundException;
+import org.serratec.exception.NotFoundErroException;
 import org.serratec.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class CategoriaService {
 			CategoriaDTO categoriaDTO = new CategoriaDTO(categoriaRepository.findById(idCategoria).get());
 			return categoriaDTO;
 		}
-			throw new NotFoundException("Categoria não encontrada!");
+			throw new NotFoundErroException("Categoria não encontrada!");
 	}
 
 	@Transactional
@@ -51,13 +51,13 @@ public class CategoriaService {
 			CategoriaDTO categoriaDTO = new CategoriaDTO(categoriaRepository.findById(categoriaBanco.getId()).get());
 			return categoriaDTO;
 		}
-		throw new NotFoundException("Categoria não encontrada!");
+		throw new NotFoundErroException("Categoria não encontrada!");
 	}
 
 	@Transactional
 	public void deleteById(Long idCategoria) {
 		if (!categoriaRepository.existsById(idCategoria)) {
-			throw new NotFoundException("Categoria não encontrada!");
+			throw new NotFoundErroException("Categoria não encontrada!");
 		}
 		categoriaRepository.deleteById(idCategoria);
 	}

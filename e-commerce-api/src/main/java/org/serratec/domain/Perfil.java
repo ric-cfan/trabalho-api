@@ -16,14 +16,20 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "perfil")
 public class Perfil {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único do perfil")
 	@Column(name = "id_perfil")
 	private Long id;
+
 	@NotBlank
+	@ApiModelProperty(value="Tipo do perfil")
 	@Column(name = "tipo", nullable = false, length = 5)
 	private String tipo;
 	

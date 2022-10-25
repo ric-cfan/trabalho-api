@@ -11,7 +11,7 @@ import org.serratec.domain.Produto;
 import org.serratec.dto.ImagemProdutoDTO;
 import org.serratec.dto.ProdutoDTO2;
 import org.serratec.exception.DescricaoProdutoException;
-import org.serratec.exception.NotFoundException;
+import org.serratec.exception.NotFoundErroException;
 import org.serratec.repository.CategoriaRepository;
 import org.serratec.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class ProdutoService {
 
 			return dto;
 		}
-		throw new NotFoundException("Produto não encontrado!");
+		throw new NotFoundErroException("Produto não encontrado!");
 
 	}
 
@@ -91,7 +91,7 @@ public class ProdutoService {
 	@Transactional
 	public ImagemProdutoDTO atualizar(Long idProduto, ProdutoDTO2 produto, MultipartFile file) throws IOException {
 		if(!produtoRepository.existsById(idProduto)) {
-			throw new NotFoundException("Produto não encontrado!");
+			throw new NotFoundErroException("Produto não encontrado!");
 		}
 		Optional<Categoria> categoria = categoriaRepository.findById(produto.getIdCategoria());
 		Produto produtoAtualizado = new Produto(produto, categoria.get());
@@ -99,7 +99,7 @@ public class ProdutoService {
 		if (Optional.ofNullable(produtoSalvo).isPresent()) {
 			produtoAtualizado.setId(idProduto);
 		} else {
-			throw new NotFoundException("Produto não encontrado!");
+			throw new NotFoundErroException("Produto não encontrado!");
 		}
 
 		Imagem imagem = new Imagem();
@@ -126,7 +126,7 @@ public class ProdutoService {
 	@Transactional
 	public void deleteById(Long idProduto) {
 		if (!produtoRepository.existsById(idProduto)) {
-			throw new NotFoundException("Produto não encontrado!");
+			throw new NotFoundErroException("Produto não encontrado!");
 		}
 		produtoRepository.deleteById(idProduto);
 

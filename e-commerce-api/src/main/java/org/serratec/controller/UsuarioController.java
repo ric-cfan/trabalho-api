@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
@@ -24,11 +28,26 @@ public class UsuarioController {
 	UsuarioService usuarioService;
 	
 	@GetMapping
+	@ApiOperation(value = "Retorna lista de Usuários", notes = "Listagem de Usuários")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna lista de Usuários"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+	})
 	public ResponseEntity<List<UsuarioDTO>> listar() {
 		return ResponseEntity.ok(usuarioService.findAll());
 	}
 
 	@PostMapping
+	@ApiOperation(value = "Insere os dados de um Usuário", notes = "Inserir Usuário")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "Usuário adicionado"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
+			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+	})
 	public ResponseEntity<UsuarioDTO> inserir(@RequestBody UsuarioInserirDTO usuario,Usuario idUsuario) {
 		UsuarioDTO usuarioCadastro = usuarioService.inserir(usuario);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUsuario.getId())

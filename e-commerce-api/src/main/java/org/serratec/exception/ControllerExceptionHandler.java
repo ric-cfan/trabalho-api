@@ -3,8 +3,6 @@ package org.serratec.exception;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +50,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.unprocessableEntity().body(ex.getMessage());
 	}
 
-    @ExceptionHandler(NotFoundException.class)
-	protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+    @ExceptionHandler(EstoqueInsuficienteException.class)
+	protected ResponseEntity<Object> handleEstoqueInsuficienteException(EstoqueInsuficienteException ex) {
+		return ResponseEntity.unprocessableEntity().body(ex.getMessage());
+	}
+
+    @ExceptionHandler(NotFoundErroException.class)
+	protected ResponseEntity<Object> handleNotFoundErroException(NotFoundErroException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 

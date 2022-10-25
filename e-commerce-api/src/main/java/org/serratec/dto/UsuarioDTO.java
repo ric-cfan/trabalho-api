@@ -3,15 +3,26 @@ package org.serratec.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+
 import org.serratec.domain.Perfil;
 import org.serratec.domain.Usuario;
 import org.serratec.domain.UsuarioPerfil;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
+
 
 public class UsuarioDTO {
+
+	@ApiModelProperty(value="Identificador único do usuário")
 	private Long id;
+
+	@NotBlank
+	@ApiModelProperty(value="Nome do usuário")
 	private String nome;
+
+	@NotBlank
+	@ApiModelProperty(value="Email do usuário")
 	private String email;
 	
 	private Set<Perfil> perfis;

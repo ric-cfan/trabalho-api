@@ -10,11 +10,15 @@ import javax.persistence.Table;
 
 import org.serratec.domain.pk.UsuarioPerfilPK;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "usuario_perfil")
 public class UsuarioPerfil {
+
 	@EmbeddedId
 	private UsuarioPerfilPK id = new UsuarioPerfilPK();
+	@ApiModelProperty(value="Data da criação")
 	@Column(name = "data_criacao")
 	private LocalDate dataCriacao;
 

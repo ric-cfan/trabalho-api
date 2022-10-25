@@ -11,7 +11,7 @@ import org.serratec.dto.ClienteDTO2;
 import org.serratec.dto.EnderecoViaCepDTO;
 import org.serratec.exception.CpfException;
 import org.serratec.exception.EmailException;
-import org.serratec.exception.NotFoundException;
+import org.serratec.exception.NotFoundErroException;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class ClienteService {
 			ClienteDTO2 cliente = new ClienteDTO2(clienteRepository.findById(idCliente).get());
 			return cliente;
 		}
-		throw new NotFoundException("Cliente não encontrado!");
+		throw new NotFoundErroException("Cliente não encontrado!");
 	}
 
 	@Transactional
@@ -106,7 +106,7 @@ public class ClienteService {
 	public ClienteDTO2 atualizar(ClienteDTO1 cliente, Long idCliente) {
 
 		if (!clienteRepository.existsById(idCliente)) {
-			throw new NotFoundException("Cliente não encontrado!");
+			throw new NotFoundErroException("Cliente não encontrado!");
 		}
 
 		cliente.setIdCliente(idCliente);
@@ -157,7 +157,7 @@ public class ClienteService {
 	@Transactional
 	public void deleteById(Long idCliente) {
 		if (!clienteRepository.existsById(idCliente)) {
-			throw new NotFoundException("Cliente não encontrado!");
+			throw new NotFoundErroException("Cliente não encontrado!");
 		}
 		clienteRepository.deleteById(idCliente);
 	}

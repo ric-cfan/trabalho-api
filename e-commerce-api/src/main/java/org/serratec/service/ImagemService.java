@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 
 import org.serratec.domain.Imagem;
 import org.serratec.domain.Produto;
-import org.serratec.exception.NotFoundException;
+import org.serratec.exception.NotFoundErroException;
 import org.serratec.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ImagemService {
 		if (imagem.isPresent()) {
 			return imagem.get();
 		}
-		throw new NotFoundException("Imagem não encontrada!");
+		throw new NotFoundErroException("Imagem não encontrada!");
 	}
 
 //	@Transactional
@@ -43,7 +43,7 @@ public class ImagemService {
 		produto.setId(id);
 		Optional<Imagem> imagem = imagemRepository.findByProduto(produto);
 		if (!imagem.isPresent()) {
-			throw new NotFoundException("Imagem não encontrada!");
+			throw new NotFoundErroException("Imagem não encontrada!");
 		}
 		return imagem;
 	}

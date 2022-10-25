@@ -15,7 +15,6 @@ import org.serratec.exception.EmailException;
 import org.serratec.exception.SenhaException;
 import org.serratec.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -15,7 +15,8 @@ import org.serratec.dto.PedidoDTO2;
 import org.serratec.dto.RelatorioPedidoDTO;
 import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.exception.EmailException;
-import org.serratec.exception.NotFoundException;
+import org.serratec.exception.EstoqueInsuficienteException;
+import org.serratec.exception.NotFoundErroException;
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
@@ -51,7 +52,7 @@ public class PedidoService {
 
 	public PedidoDTO findById(Long idPedido) {
 		if (!pedidoRepository.findById(idPedido).isPresent()) {
-			throw new NotFoundException("Pedido não encontrado!");
+			throw new NotFoundErroException("Pedido não encontrado!");
 		}
 		PedidoDTO pedidoDTO = new PedidoDTO(pedidoRepository.findById(idPedido).get());
 		return pedidoDTO;
@@ -76,7 +77,7 @@ public class PedidoService {
 			listaItemPedido.add(new ItemPedido(itemPedidoDTO2, produto));
 			
 			if (produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade() < 0) { //Calculo do estoque pos venda, checa se ainda e maior que 0
-				return null; //EXCEPTION VEM AQUI
+				throw new EstoqueInsuficienteException("Estoque Insuficiente!");
 			}
 			
 			valorTotal += produto.getValorUnitario() * (1 - itemPedidoDTO2.getPercentualDesconto() / 100)
@@ -102,7 +103,7 @@ public class PedidoService {
 	public PedidoDTO atualizar(PedidoDTO2 pedido, Long idPedido) {
 
 		if (!pedidoRepository.existsById(idPedido)) {
-			throw new NotFoundException("Pedido não encontrado!");
+			throw new NotFoundErroException("Pedido não encontrado!");
 		}
 			Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
 
@@ -117,7 +118,7 @@ public class PedidoService {
 
 				Integer estoquePosVenda = produto.getQtdEstoque() - itemPedidoDTO2.getQuantidade();
 				if (estoquePosVenda < 0) {
-					return null; //EXCEPTION VEM AQUI
+					throw new EstoqueInsuficienteException("Estoque Insuficiente!");
 				}
 				if (pedido.getStatus().equals("P")) {
 					produto.setQtdEstoque(estoquePosVenda);
@@ -140,7 +141,7 @@ public class PedidoService {
 	@Transactional
 	public void deleteById(Long idPedido) {
 		if(!pedidoRepository.existsById(idPedido)) {
-			throw new NotFoundException("Pedido não encontrado!");
+			throw new NotFoundErroException("Pedido não encontrado!");
 		}
 		pedidoRepository.deleteById(idPedido);
 	}

@@ -2,7 +2,6 @@ package org.serratec.domain;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,27 +9,34 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "usuario")
 public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único do usuário")
 	@Column(name = "id_usuario")
 	private Long id;
+
+
 	@NotBlank
+	@ApiModelProperty(value="Nome do usuário")
 	@Column(name = "nome_completo", nullable = false, length = 50)
 	private String nome;
+
 	@NotBlank
+	@ApiModelProperty(value="Email do usuário")
 	@Column(name = "email", nullable = false, length = 80)
 	private String email;
+
 	@NotBlank
+	@ApiModelProperty(value="Senha do usuário")
 	@Column(name = "senha", nullable = false, length = 8)
 	private String senha;
 
