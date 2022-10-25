@@ -15,32 +15,40 @@ import javax.validation.constraints.NotNull;
 
 import org.serratec.dto.ItemPedidoDTO2;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "item_pedido")
 public class ItemPedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador do item pedido")
 	@Column(name = "id_item_pedido")
 	private Long id;
 
 	@NotNull
+	@ApiModelProperty(value="Quantidade de produto do item pedido")
 	@Column(name = "quantidade", nullable = false)
 	private Integer quantidade;
 
 	@NotNull
+	@ApiModelProperty(value="Preço de venda do produto no item pedido")
 	@Column(name = "preco_venda", nullable = false)
 	private Double precoVenda;
 
 	@NotNull
+	@ApiModelProperty(value="Percentual de desconto do item pedido")
 	@Column(name = "percentual_desconto", nullable = false)
 	private Double percentualDesconto;
 
 	@NotNull
+	@ApiModelProperty(value="Valor bruto do item pedido")
 	@Column(name = "valor_bruto", nullable = false)
 	private Double valorBruto;
 
 	@NotNull
+	@ApiModelProperty(value="Valor líquido do item pedido")
 	@Column(name = "valor_liquido", nullable = false)
 	private Double valorLiquido;
 
@@ -68,10 +76,10 @@ public class ItemPedido {
 
 	public ItemPedido(ItemPedidoDTO2 itemPedido, Produto produto) {
 		this.quantidade = itemPedido.getQuantidade();
-		this.percentualDesconto = itemPedido.getPercentualDesconto() / 100;
-		this.valorBruto = produto.getValorUnitario();
-		this.valorLiquido = valorBruto * percentualDesconto;
-		this.precoVenda = valorLiquido * quantidade;
+		this.percentualDesconto = itemPedido.getPercentualDesconto();
+		this.valorBruto = produto.getValorUnitario() * itemPedido.getQuantidade();
+		this.valorLiquido = valorBruto * (1 - (percentualDesconto/100));
+		this.precoVenda = produto.getValorUnitario();
 		this.produto = produto;
 	}
 

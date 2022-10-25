@@ -39,7 +39,6 @@ CREATE TABLE Imagem(
 	id_imagem serial PRIMARY KEY,
 	dados BYTEA,
 	tipo varchar(50),
-	url varchar(100),
 	id_produto int NOT NULL REFERENCES Produto(id_produto)
 );
 

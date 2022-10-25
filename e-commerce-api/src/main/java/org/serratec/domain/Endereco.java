@@ -10,9 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.serratec.dto.ClienteDTO1;
 import org.serratec.dto.EnderecoViaCepDTO;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "endereco")
@@ -20,33 +23,43 @@ public class Endereco {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único do endereço")
 	@Column(name = "id_endereco")
 	private Long id;
 
 	@NotBlank
+	@Size(min = 8, max = 8)
+	@ApiModelProperty(value="Cep do endereço")
 	@Column(name = "cep", nullable = false, length = 8)
 	private String cep;
 
 	@NotBlank
+	@ApiModelProperty(value="Rua do endereço")
 	@Column(name = "rua", nullable = false, length = 80)
 	private String rua;
 
 	@NotBlank
+	@ApiModelProperty(value="Bairro do endereço")
 	@Column(name = "bairro", nullable = false, length = 50)
 	private String bairro;
 
 	@NotBlank
+	@ApiModelProperty(value="Cidade do endereço")
 	@Column(name = "cidade", nullable = false, length = 80)
 	private String cidade;
 
 	@NotBlank
+	@ApiModelProperty(value="Número do endereço")
 	@Column(name = "numero", nullable = false, length = 20)
 	private String numero;
 
+	@ApiModelProperty(value="Complemento do endereço")
 	@Column(name = "complemento", length = 80)
 	private String complemento;
 
 	@NotBlank
+	@Size(min = 2, max = 2)
+	@ApiModelProperty(value="Estado do endereço")
 	@Column(name = "uf", nullable = false, length = 2)
 	private String uf;
 

@@ -20,29 +20,37 @@ import javax.validation.constraints.NotNull;
 
 import org.serratec.dto.ProdutoDTO2;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "produto")
 public class Produto {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único do produto")
 	@Column(name = "id_produto")
 	private Long id;
 
 	@NotBlank
+	@ApiModelProperty(value="Nome do produto")
 	@Column(name = "nome", nullable = false, length = 30, unique = true)
 	private String nome;
 
+	@ApiModelProperty(value="Descrição do produto")
 	@Column(name = "descricao", length = 200)
 	private String descricao;
 
+	@ApiModelProperty(value="Quantidade de estoque do produto")
 	@Column(name = "qtd_estoque")
 	private Integer qtdEstoque;
 
+	@ApiModelProperty(value="Data do cadastro do produto")
 	@Column(name = "data_cadastro")
 	private LocalDate dataCadastro;
 
 	@NotNull
+	@ApiModelProperty(value="Valor unitário do produto")
 	@Column(name = "valor_unitario", nullable = false)
 	private Double valorUnitario;
 

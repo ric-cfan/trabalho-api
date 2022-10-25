@@ -2,15 +2,34 @@ package org.serratec.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 import org.serratec.domain.Produto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ImagemProdutoDTO {
+	
+	@NotNull
+	@ApiModelProperty(value="Identificador único do produto")
 	private Long idProduto;
+
+	@ApiModelProperty(value="Nome do produto")
 	private String nome;
+
+	@ApiModelProperty(value="Descrição do produto")
 	private String descricao;
+
+	@ApiModelProperty(value="Quantidade de estoque do produto")
 	private Integer qtdEstoque;
+	
+	@ApiModelProperty(value="Data do cadastro do produto")
 	private LocalDate dataCadastro;
+
+	@ApiModelProperty(value="Valor unitário do produto")
 	private Double valorUnitario;
+
+	@ApiModelProperty(value="URL da imagem do produto")
 	private String urlImagem;
 
 	private CategoriaDTO categoria;

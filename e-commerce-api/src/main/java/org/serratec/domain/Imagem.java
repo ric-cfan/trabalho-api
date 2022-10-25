@@ -16,20 +16,25 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "imagem")
 public class Imagem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único da imagem")
 	@Column(name = "id_imagem")
 	private Long id;
 
 	@Lob
 	@Type(type="org.hibernate.type.BinaryType")
+	@ApiModelProperty(value="Dados da imagem")
 	@Column(name = "dados")
 	private byte[] dados;
 
+	@ApiModelProperty(value="Tipo da imagem")
 	@Column(name = "tipo")
 	private String tipo;
 

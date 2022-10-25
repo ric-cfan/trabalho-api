@@ -2,20 +2,36 @@ package org.serratec.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.domain.Cliente;
+
+import io.swagger.annotations.ApiModelProperty;
 
 public class ClienteDTO2 {
 
+	@ApiModelProperty(value="Identificador único do cliente")
 	private Long idCliente;
-
+	
+	@NotBlank
+	@ApiModelProperty(value="Nome completo do cliente")
 	private String nomeCompleto;
 
+	@NotBlank
+	@CPF
+	@ApiModelProperty(value="Cpf do cliente")
 	private String cpf;
-
+	
+	@NotBlank
+	@ApiModelProperty(value="Telefone do cliente")
 	private String telefone;
 
+	@ApiModelProperty(value="Data de nascimento do cliente")
 	private LocalDate dataNascimento;
 
+	@NotNull
 	private EnderecoDTO endereco;
 
 	public ClienteDTO2(Cliente cliente) {

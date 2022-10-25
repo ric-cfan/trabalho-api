@@ -4,14 +4,33 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.serratec.domain.ItemPedido;
 import org.serratec.domain.Pedido;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class PedidoDTO2 {
+
+	@NotNull
+	@ApiModelProperty(value="Data do pedido")
 	private LocalDate dataPedido;
+
+	@NotNull
+	@ApiModelProperty(value="Data de entrega do pedido")
 	private LocalDate dataEntrega;
+
+	@NotNull
+	@ApiModelProperty(value="Data de envio do pedido")
 	private LocalDate dataEnvio;
+
+	@NotBlank
+	@ApiModelProperty(value="Status do pedido")
 	private String status;
+
+	@ApiModelProperty(value="Identificador único do cliente")
 	private Long idCliente;
 	
 	private List<ItemPedidoDTO2> itens;

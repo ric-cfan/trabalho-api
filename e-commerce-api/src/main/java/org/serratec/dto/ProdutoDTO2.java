@@ -1,11 +1,26 @@
 package org.serratec.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.serratec.domain.Produto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ProdutoDTO2 {
+
+	@NotBlank
+	@ApiModelProperty(value="Nome do produto")
 	private String nome;
+	
+	@ApiModelProperty(value="Descrição do produto")
 	private String descricao;
+
+	@ApiModelProperty(value="Quantidade de estoque do produto")
 	private Integer qtdEstoque;
+
+	@NotNull
+	@ApiModelProperty(value="Valor unitário do produto")
 	private Double valorUnitario;
 
 	private Long idCategoria;

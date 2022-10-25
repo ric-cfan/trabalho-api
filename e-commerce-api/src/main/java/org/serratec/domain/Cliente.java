@@ -17,9 +17,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.dto.ClienteDTO1;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "cliente")
@@ -27,27 +30,34 @@ public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único do cliente")
 	@Column(name = "id_cliente")
 	private Long id;
 
 	@NotBlank
+	@ApiModelProperty(value="Nome completo do cliente")
 	@Column(name = "nome_completo", nullable = false, length = 50)
 	private String nome;
 
 	@NotBlank
 	@Email
+	@ApiModelProperty(value="Email do cliente")
 	@Column(name = "email", nullable = false, length = 80, unique = true)
 	private String email;
 
 	@NotBlank
 	@CPF
+	@Size(min = 11, max = 11)
+	@ApiModelProperty(value="Cpf do cliente")
 	@Column(name = "cpf", nullable = false, length = 11, unique = true)
 	private String cpf;
 
 	@NotBlank
+	@ApiModelProperty(value="Telefone do cliente")
 	@Column(name = "telefone", nullable = false, length = 40)
 	private String telefone;
 
+	@ApiModelProperty(value="Data de nascimento do cliente")
 	@Column(name = "data_nascimento")
 	private LocalDate dataNascimento;
 

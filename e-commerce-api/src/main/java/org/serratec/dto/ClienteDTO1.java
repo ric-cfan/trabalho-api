@@ -5,31 +5,47 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.domain.Cliente;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ClienteDTO1 {
+
+	@ApiModelProperty(value="Identificador único do cliente")
 	private Long idCliente;
 
 	@NotBlank
+	@ApiModelProperty(value="Nome completo do cliente")
 	private String nomeCompleto;
 
 	@NotBlank
+	@CPF
+	@Size(min = 11, max = 11)
+	@ApiModelProperty(value="Cpf do cliente")
 	private String cpf;
 
 	@NotBlank
+	@ApiModelProperty(value="Telefone do cliente")
 	private String telefone;
 
 	@NotNull
+	@ApiModelProperty(value="Data de nascimento do cliente")
 	private LocalDate dataNascimento;
 
 	@NotBlank
+	@Size(min = 8, max = 8)
+	@ApiModelProperty(value="Cep do endereço do cliente")
 	private String cep;
 
 	@NotBlank
+	@ApiModelProperty(value="Número do endereço do cliente")
 	private String numero;
 
 	@NotBlank
+	@ApiModelProperty(value="Email do cliente")
 	private String email;
 
 	public ClienteDTO1() {

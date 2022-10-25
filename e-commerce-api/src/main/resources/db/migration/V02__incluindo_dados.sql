@@ -42,3 +42,4 @@ INSERT INTO Item_pedido (quantidade, preco_venda, percentual_desconto, valor_bru
 	(2, 100.0, 0, 50.0, 50.0, 1, 2),
 	(2, 50.0, 0, 25.0, 25.0, 2, 2),
 	(2, 800.0, 0, 800.0, 800.0, 3, 3);
+	
