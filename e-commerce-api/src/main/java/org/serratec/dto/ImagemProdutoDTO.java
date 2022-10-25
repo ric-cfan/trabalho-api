@@ -2,11 +2,15 @@ package org.serratec.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 import org.serratec.domain.Produto;
 
 import io.swagger.annotations.ApiModelProperty;
 
 public class ImagemProdutoDTO {
+	
+	@NotNull
 	@ApiModelProperty(value="Identificador único do produto")
 	private Long idProduto;
 

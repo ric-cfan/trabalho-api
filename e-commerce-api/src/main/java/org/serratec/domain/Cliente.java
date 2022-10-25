@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.dto.ClienteDTO1;
@@ -46,6 +47,7 @@ public class Cliente {
 
 	@NotBlank
 	@CPF
+	@Size(min = 11, max = 11)
 	@ApiModelProperty(value="Cpf do cliente")
 	@Column(name = "cpf", nullable = false, length = 11, unique = true)
 	private String cpf;

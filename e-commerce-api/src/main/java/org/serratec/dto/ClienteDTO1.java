@@ -5,7 +5,9 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.br.CPF;
 import org.serratec.domain.Cliente;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -20,6 +22,8 @@ public class ClienteDTO1 {
 	private String nomeCompleto;
 
 	@NotBlank
+	@CPF
+	@Size(min = 11, max = 11)
 	@ApiModelProperty(value="Cpf do cliente")
 	private String cpf;
 
@@ -32,6 +36,7 @@ public class ClienteDTO1 {
 	private LocalDate dataNascimento;
 
 	@NotBlank
+	@Size(min = 8, max = 8)
 	@ApiModelProperty(value="Cep do endereço do cliente")
 	private String cep;
 

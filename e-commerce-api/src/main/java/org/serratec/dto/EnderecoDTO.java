@@ -1,5 +1,8 @@
 package org.serratec.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.serratec.domain.Endereco;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -9,24 +12,32 @@ public class EnderecoDTO {
 	@ApiModelProperty(value="Identificador único do endereço")
 	private Long idEndereco;
 
+	@NotBlank
 	@ApiModelProperty(value="Rua do endereço")
 	private String rua;
 
+	@NotBlank
 	@ApiModelProperty(value="Bairro do endereço")
 	private String bairro;
-
+	
+	@NotBlank
 	@ApiModelProperty(value="Número do endereço")
 	private String numero;
-
+	
 	@ApiModelProperty(value="Complemento do endereço")
 	private String complemento;
-
+	
+	@NotBlank
 	@ApiModelProperty(value="Cidade do endereço")
 	private String cidade;
-
+	
+	@NotBlank
+	@Size(min = 2, max = 2)
 	@ApiModelProperty(value="Estado do endereço")
 	private String uf;
 
+	@NotBlank
+	@Size(min = 8, max = 8)
 	@ApiModelProperty(value="Cep do endereço")
 	private String cep;
 

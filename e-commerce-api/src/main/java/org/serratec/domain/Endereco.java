@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.serratec.dto.ClienteDTO1;
 import org.serratec.dto.EnderecoViaCepDTO;
@@ -27,6 +28,7 @@ public class Endereco {
 	private Long id;
 
 	@NotBlank
+	@Size(min = 8, max = 8)
 	@ApiModelProperty(value="Cep do endereço")
 	@Column(name = "cep", nullable = false, length = 8)
 	private String cep;
@@ -56,6 +58,7 @@ public class Endereco {
 	private String complemento;
 
 	@NotBlank
+	@Size(min = 2, max = 2)
 	@ApiModelProperty(value="Estado do endereço")
 	@Column(name = "uf", nullable = false, length = 2)
 	private String uf;

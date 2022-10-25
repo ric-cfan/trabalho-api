@@ -2,15 +2,19 @@ package org.serratec.dto;
 
 
 
+import javax.validation.constraints.NotNull;
+
 import org.serratec.domain.ItemPedido;
 
 import io.swagger.annotations.ApiModelProperty;
 
 public class ItemPedidoDTO2 {
 	
+	@NotNull
 	@ApiModelProperty(value="Quantidade de produto do item pedido")
 	private Integer quantidade;
 
+	@NotNull
 	@ApiModelProperty(value="Percentual de desconto do item pedido")
 	private Double percentualDesconto;
 
