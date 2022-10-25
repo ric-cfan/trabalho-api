@@ -7,11 +7,23 @@ import java.util.List;
 import org.serratec.domain.ItemPedido;
 import org.serratec.domain.Pedido;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class PedidoDTO2 {
+
+	@ApiModelProperty(value="Data do pedido")
 	private LocalDate dataPedido;
+
+	@ApiModelProperty(value="Data de entrega do pedido")
 	private LocalDate dataEntrega;
+
+	@ApiModelProperty(value="Data de envio do pedido")
 	private LocalDate dataEnvio;
+
+	@ApiModelProperty(value="Status do pedido")
 	private String status;
+
+	@ApiModelProperty(value="Identificador único do cliente")
 	private Long idCliente;
 	
 	private List<ItemPedidoDTO2> itens;

@@ -2,10 +2,7 @@ package org.serratec.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-
 import javax.validation.Valid;
-
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
 import org.serratec.exception.DataPedidoAnteriorException;
@@ -21,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 
 @RestController
 @RequestMapping("/api/pedido")
@@ -33,7 +28,7 @@ public class PedidoController {
 
 	@Autowired
 	private PedidoService pedidoService;
-	
+
 	@GetMapping
 	@ApiOperation(value = "Retorna lista de Pedidos", notes = "Listagem de Pedidos")
 	@ApiResponses(value = {
@@ -47,7 +42,7 @@ public class PedidoController {
 		return ResponseEntity.ok(pedidoService.listarTodos());
 	}
 
-    @GetMapping("/{idPedido}")
+	@GetMapping("/{idPedido}")
 	@ApiOperation(value = "Retorna um Pedido", notes = "Pedido")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorna um Pedido"),
@@ -57,16 +52,11 @@ public class PedidoController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<PedidoDTO> buscarPorId(@PathVariable Long idPedido) {
-		Optional<PedidoDTO> pedido = pedidoService.findById(idPedido);
-		if (pedido.isPresent()) {
-            return ResponseEntity.ok(pedido.get()); 
-            }
-            
-            return ResponseEntity.notFound().build();
+		PedidoDTO pedido = pedidoService.findById(idPedido);
+		return ResponseEntity.ok(pedido);
 	}
-	
-	
-	@PostMapping({"/cadastrar"})
+
+	@PostMapping({ "/cadastrar" })
 	@ApiOperation(value = "Insere os dados de um pedido", notes = "Inserir Pedido")
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "Pedido adcionado"),
@@ -74,7 +64,8 @@ public class PedidoController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<PedidoDTO> cadastrar(@Valid @RequestBody PedidoDTO2 pedido) throws DataPedidoAnteriorException {
+	public ResponseEntity<PedidoDTO> cadastrar(@Valid @RequestBody PedidoDTO2 pedido)
+			throws DataPedidoAnteriorException {
 		PedidoDTO pedidoDTO = pedidoService.cadastrar(pedido);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
@@ -107,8 +98,8 @@ public class PedidoController {
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-    public ResponseEntity<Void> deletar(@PathVariable Long idPedido) {
-        pedidoService.deleteById(idPedido);
+	public ResponseEntity<Void> deletar(@PathVariable Long idPedido) {
+		pedidoService.deleteById(idPedido);
 		return ResponseEntity.noContent().build();
-    }
+	}
 }

@@ -15,19 +15,24 @@ import javax.validation.constraints.NotBlank;
 
 import org.serratec.dto.CategoriaDTO2;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "categoria")
 public class Categoria {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único da categoria")
 	@Column(name = "id_categoria")
 	private Long id;
 
 	@NotBlank
+	@ApiModelProperty(value="Nome da categoria")
 	@Column(name = "nome", nullable = false, length = 30, unique = true)
 	private String nome;
 
+	@ApiModelProperty(value="Descrição da categoria")
 	@Column(name = "descricao", length = 200)
 	private String descricao;
 

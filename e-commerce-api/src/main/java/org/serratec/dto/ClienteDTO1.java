@@ -8,28 +8,39 @@ import javax.validation.constraints.NotNull;
 
 import org.serratec.domain.Cliente;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ClienteDTO1 {
+
+	@ApiModelProperty(value="Identificador único do cliente")
 	private Long idCliente;
 
 	@NotBlank
+	@ApiModelProperty(value="Nome completo do cliente")
 	private String nomeCompleto;
 
 	@NotBlank
+	@ApiModelProperty(value="Cpf do cliente")
 	private String cpf;
 
 	@NotBlank
+	@ApiModelProperty(value="Telefone do cliente")
 	private String telefone;
 
 	@NotNull
+	@ApiModelProperty(value="Data de nascimento do cliente")
 	private LocalDate dataNascimento;
 
 	@NotBlank
+	@ApiModelProperty(value="Cep do endereço do cliente")
 	private String cep;
 
 	@NotBlank
+	@ApiModelProperty(value="Número do endereço do cliente")
 	private String numero;
 
 	@NotBlank
+	@ApiModelProperty(value="Email do cliente")
 	private String email;
 
 	public ClienteDTO1() {

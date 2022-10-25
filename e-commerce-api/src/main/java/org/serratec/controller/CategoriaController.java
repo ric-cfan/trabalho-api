@@ -2,10 +2,7 @@ package org.serratec.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-
 import javax.validation.Valid;
-
 import org.serratec.dto.CategoriaDTO;
 import org.serratec.dto.CategoriaDTO2;
 import org.serratec.service.CategoriaService;
@@ -20,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 
 @RestController
 @RequestMapping("/api/categoria")
@@ -56,12 +51,9 @@ public class CategoriaController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<CategoriaDTO> buscarPorId(@PathVariable Long idCategoria) {
-		Optional<CategoriaDTO> categoria = Optional.ofNullable(categoriaService.findById(idCategoria)) ;
-		if (categoria.isPresent()) {
-            return ResponseEntity.ok(categoria.get()); 
-            }
+		CategoriaDTO categoria = categoriaService.findById(idCategoria);
+        return ResponseEntity.ok(categoria); 
             
-            return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping({"/cadastrar"})

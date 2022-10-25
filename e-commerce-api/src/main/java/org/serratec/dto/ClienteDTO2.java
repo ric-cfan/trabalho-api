@@ -4,16 +4,23 @@ import java.time.LocalDate;
 
 import org.serratec.domain.Cliente;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ClienteDTO2 {
 
+	@ApiModelProperty(value="Identificador único do cliente")
 	private Long idCliente;
 
+	@ApiModelProperty(value="Nome completo do cliente")
 	private String nomeCompleto;
 
+	@ApiModelProperty(value="Cpf do cliente")
 	private String cpf;
 
+	@ApiModelProperty(value="Telefone do cliente")
 	private String telefone;
 
+	@ApiModelProperty(value="Data de nascimento do cliente")
 	private LocalDate dataNascimento;
 
 	private EnderecoDTO endereco;

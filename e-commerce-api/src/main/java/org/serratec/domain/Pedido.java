@@ -20,32 +20,40 @@ import javax.validation.constraints.NotNull;
 import org.serratec.dto.PedidoDTO2;
 import org.serratec.dto.RelatorioPedidoDTO;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "pedido")
 public class Pedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value="Identificador único do pedido")
 	@Column(name = "id_pedido")
 	private Long id;
 
 	@NotNull
+	@ApiModelProperty(value="Data do pedido")
 	@Column(name = "data_pedido")
 	private LocalDate dataPedido;
 
 	@NotNull
+	@ApiModelProperty(value="Data de entrega do pedido")
 	@Column(name = "data_entrega")
 	private LocalDate dataEntrega;
 
 	@NotNull
+	@ApiModelProperty(value="Data de envio do pedido")
 	@Column(name = "data_envio")
 	private LocalDate dataEnvio;
 
 	@NotBlank
+	@ApiModelProperty(value="Status do pedido")
 	@Column(name = "status", nullable = false, length = 1)
 	private String status;
 
 	@NotNull
+	@ApiModelProperty(value="Valor total do pedido")
 	@Column(name = "valor_total", nullable = false)
 	private Double valor_total;
 

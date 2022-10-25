@@ -66,12 +66,8 @@ public class ProdutoController {
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
 	public ResponseEntity<ImagemProdutoDTO> buscarPorId(@PathVariable Long idProduto) {
-		Optional<ImagemProdutoDTO> produto = produtoService.findById(idProduto);
-		if (produto.isPresent()) {
-            return ResponseEntity.ok(produto.get()); 
-            }
-            
-            return ResponseEntity.notFound().build();
+		ImagemProdutoDTO produto = produtoService.findById(idProduto);
+            return ResponseEntity.ok(produto);
 	}
 	
     @GetMapping("/{idProduto}/imagem")

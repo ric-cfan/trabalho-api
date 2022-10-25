@@ -36,18 +36,23 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EmailException.class)
-	protected ResponseEntity<Object> handleEmailExceptoin(EmailException ex) {
+	protected ResponseEntity<Object> handleEmailException(EmailException ex) {
 		return ResponseEntity.unprocessableEntity().body(ex.getMessage());
 	}
 
     @ExceptionHandler(CpfException.class)
-	protected ResponseEntity<Object> handleCpfExceptoin(CpfException ex) {
+	protected ResponseEntity<Object> handleCpfException(CpfException ex) {
 		return ResponseEntity.unprocessableEntity().body(ex.getMessage());
 	}
 
     @ExceptionHandler(DescricaoProdutoException.class)
-	protected ResponseEntity<Object> handleNomeProdutoExceptoin(DescricaoProdutoException ex) {
+	protected ResponseEntity<Object> handleDescricaoProdutoException(DescricaoProdutoException ex) {
 		return ResponseEntity.unprocessableEntity().body(ex.getMessage());
+	}
+
+    @ExceptionHandler(NotFoundException.class)
+	protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 
     @ExceptionHandler(DataPedidoAnteriorException.class)

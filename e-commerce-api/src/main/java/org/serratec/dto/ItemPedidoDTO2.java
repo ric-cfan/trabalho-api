@@ -4,10 +4,17 @@ package org.serratec.dto;
 
 import org.serratec.domain.ItemPedido;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ItemPedidoDTO2 {
 	
+	@ApiModelProperty(value="Quantidade de produto do item pedido")
 	private Integer quantidade;
+
+	@ApiModelProperty(value="Percentual de desconto do item pedido")
 	private Double percentualDesconto;
+
+	@ApiModelProperty(value="Identificador único do produto")
 	private Long idProduto;
 
 	
