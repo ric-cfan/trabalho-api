@@ -27,7 +27,10 @@ public class PedidoDTO2 {
 	private LocalDate dataEnvio;
 
 	@NotBlank
-	@ApiModelProperty(value="Status do pedido")
+	@ApiModelProperty(value="Status do pedido" + "\n"
+					+ "P = Pagamento pendente" + "\n"
+					+ "F = Pagamento Finalizado" + "\n"
+					+ "Só é aceito as siglas P ou F")
 	private String status;
 
 	@ApiModelProperty(value="Identificador único do cliente")
