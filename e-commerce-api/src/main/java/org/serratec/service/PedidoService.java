@@ -14,7 +14,9 @@ import org.serratec.dto.PedidoDTO2;
 import org.serratec.dto.RelatorioPedidoDTO;
 import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.exception.EmailException;
-import org.serratec.exception.NotFoundException;
+
+import org.serratec.exception.EmailException;
+
 import org.serratec.repository.ClienteRepository;
 import org.serratec.repository.PedidoRepository;
 import org.serratec.repository.ProdutoRepository;
@@ -86,7 +88,7 @@ public class PedidoService {
     		mailConfig.sendMailPedido(relatorioPedidoDTO);
 		} catch (Exception e) {
 			throw new EmailException("Houve um erro no envio do email, favor verificar se o email está correto.");
-		}
+
         return pedidoDTO;
 	}
 
