@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "perfil")
 public class Perfil {
@@ -24,9 +26,19 @@ public class Perfil {
 	@NotBlank
 	@Column(name = "tipo", nullable = false, length = 5)
 	private String tipo;
-	@OneToMany(mappedBy = "id.perfil", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<UsuarioPerfil> usuarioPerfis = new HashSet<>();
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.perfil", fetch = FetchType.EAGER, cascade =CascadeType.ALL)
+	private Set<UsuarioPerfil> usuarioPerfis = new HashSet<>();
+
+	public Set<UsuarioPerfil> getUsuarioPerfis() {
+		return usuarioPerfis;
+	}
+
+	public void setUsuarioPerfis(Set<UsuarioPerfil> usuarioPerfis) {
+		this.usuarioPerfis = usuarioPerfis;
+	}
+
 	public Perfil() {
 
 	}
@@ -46,6 +58,5 @@ public class Perfil {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-
 
 }

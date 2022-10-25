@@ -7,10 +7,13 @@ import org.serratec.domain.Perfil;
 import org.serratec.domain.Usuario;
 import org.serratec.domain.UsuarioPerfil;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UsuarioDTO {
 	private Long id;
 	private String nome;
 	private String email;
+	
 	private Set<Perfil> perfis;
 
 	public UsuarioDTO() {
