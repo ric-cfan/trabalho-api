@@ -18,6 +18,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.serratec.dto.PedidoDTO2;
+import org.serratec.dto.RelatorioPedidoDTO;
+
+import io.swagger.annotations.ApiModelProperty;
 
 import io.swagger.annotations.ApiModelProperty;
 
