@@ -3,6 +3,7 @@ package org.serratec.dto;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -44,6 +45,7 @@ public class ClienteDTO1 {
 	@ApiModelProperty(value="Número do endereço do cliente")
 	private String numero;
 
+	@Email
 	@NotBlank
 	@ApiModelProperty(value="Email do cliente")
 	private String email;

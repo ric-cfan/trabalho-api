@@ -47,8 +47,6 @@ public class ConfigSeguranca extends WebSecurityConfigurerAdapter {
 		.antMatchers("/swagger-ui/**", "/login/**").permitAll()
 		.antMatchers(HttpMethod.GET,"/api/produto/**","/api/categoria/**").permitAll()
 		
-		.and()
-		.authorizeHttpRequests()
 		.antMatchers(HttpMethod.POST,"/api/usuario/**", "/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**").hasAuthority("ADMIN")
 		.antMatchers(HttpMethod.DELETE,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","/api/usuario/**").hasAuthority("ADMIN")
 		.antMatchers(HttpMethod.PUT,"/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**","/api/usuario/**").hasAuthority("ADMIN")
@@ -56,8 +54,8 @@ public class ConfigSeguranca extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/api/cliente/**","/api/pedido/**","/api/usuario/**").hasAnyAuthority("ADMIN","USER")
 
 		.anyRequest().authenticated()
-		.and()
-		.httpBasic()
+//		.and()
+//		.httpBasic()
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
