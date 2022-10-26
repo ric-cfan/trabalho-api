@@ -44,7 +44,9 @@ public class ConfigSeguranca extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http)throws Exception{
 		http.csrf().disable().authorizeHttpRequests()
 		
-		.antMatchers("/swagger-ui/**", "/login/**").permitAll()
+		.antMatchers("/swagger-ui/**", "/login/**", "/v2/api-docs", "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security").permitAll()
 		.antMatchers(HttpMethod.GET,"/api/produto/**","/api/categoria/**").permitAll()
 		
 		.antMatchers(HttpMethod.POST,"/api/usuario/**", "/api/produto/**","/api/categoria/**","/api/pedido/**","/api/cliente/**").hasAuthority("ADMIN")
@@ -54,8 +56,8 @@ public class ConfigSeguranca extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/api/cliente/**","/api/pedido/**","/api/usuario/**").hasAnyAuthority("ADMIN","USER")
 
 		.anyRequest().authenticated()
-//		.and()
-//		.httpBasic()
+		.and()
+		.httpBasic()
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
