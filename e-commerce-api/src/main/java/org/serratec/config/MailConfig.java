@@ -32,7 +32,7 @@ public class MailConfig {
 		
 		
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom("thaisamuniz89gmail.com");
+		message.setFrom("projetoapi2022@gmail.com");
 		message.setSubject("Pedido cadastrado com sucesso");
 		message.setText(sb.toString());
 		message.setTo(relatorioPedidoDTO.getEmailCliente());

@@ -3,7 +3,7 @@ package org.serratec.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import org.serratec.config.MailConfig;
 import org.serratec.domain.Cliente;
 import org.serratec.domain.ItemPedido;
@@ -59,9 +59,29 @@ public class PedidoService {
 		return pedidoDTO;
 
 	}
+	
+	public List<RelatorioPedidoDTO> listarTodosRelatorios() {
+		List<Pedido> pedidos = pedidoRepository.findAll();
+		List<RelatorioPedidoDTO> pedidosDTO = new ArrayList<>();
+
+		for (Pedido pedido : pedidos) {
+			pedidosDTO.add(new RelatorioPedidoDTO(pedido));
+
+		}
+		return pedidosDTO;
+	}
+	
+	public RelatorioPedidoDTO findRelatorioById(Long idPedido) {
+		if (!pedidoRepository.findById(idPedido).isPresent()) {
+			throw new NotFoundErroException("Pedido não encontrado!");
+		}
+		RelatorioPedidoDTO pedidoDTO = new RelatorioPedidoDTO(pedidoRepository.findById(idPedido).get());
+		return pedidoDTO;
+
+	}
 
 	@Transactional
-	public PedidoDTO cadastrar(PedidoDTO2 pedido) throws DataPedidoAnteriorException {
+	public PedidoDTO cadastrar(PedidoDTO2 pedido) throws DataPedidoAnteriorException, EmailException {
 		if (pedido.getDataPedido().isBefore(LocalDate.now())) {
 			throw new DataPedidoAnteriorException();
 		}

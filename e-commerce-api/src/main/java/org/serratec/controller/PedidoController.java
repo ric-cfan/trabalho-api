@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
+import org.serratec.dto.RelatorioPedidoDTO;
 import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,33 @@ public class PedidoController {
 	})
 	public ResponseEntity<PedidoDTO> buscarPorId(@PathVariable Long idPedido) {
 		PedidoDTO pedido = pedidoService.findById(idPedido);
+		return ResponseEntity.ok(pedido);
+	}
+	
+	@GetMapping("/relatorio")
+	@ApiOperation(value = "Retorna lista de Pedidos", notes = "Listagem de Pedidos")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna lista de Pedidos"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+	})
+	public ResponseEntity<List<RelatorioPedidoDTO>> listarTodosRelatorios() {
+		return ResponseEntity.ok(pedidoService.listarTodosRelatorios());
+	}
+
+	@GetMapping("/{idPedido}/relatorio")
+	@ApiOperation(value = "Retorna um Pedido", notes = "Pedido")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna um Pedido"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
+	})
+	public ResponseEntity<RelatorioPedidoDTO> buscarPorIdRelatorio(@PathVariable Long idPedido) {
+		RelatorioPedidoDTO pedido = pedidoService.findRelatorioById(idPedido);
 		return ResponseEntity.ok(pedido);
 	}
 

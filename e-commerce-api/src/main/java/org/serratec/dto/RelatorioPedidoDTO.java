@@ -44,6 +44,7 @@ public class RelatorioPedidoDTO {
 		this.emailCliente = pedido.getCliente().getEmail();
 		
 	}
+	
 	public RelatorioPedidoDTO() {
 		super();
 	}
