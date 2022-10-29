@@ -70,7 +70,7 @@ public class Pedido {
 		this.dataPedido = dataPedido;
 		this.dataEntrega = dataEntrega;
 		this.dataEnvio = dataEnvio;
-		this.status = status;
+		this.status = status.toUpperCase();
 		this.valor_total = valor_total;
 		this.cliente = cliente;
 		this.listaItemPedido = listaItemPedido;
@@ -80,7 +80,7 @@ public class Pedido {
 		this.dataPedido = pedido.getDataPedido();
 		this.dataEntrega = pedido.getDataEntrega();
 		this.dataEnvio = pedido.getDataEnvio();
-		this.status = pedido.getStatus();
+		this.status = pedido.getStatus().toUpperCase();
 		this.valor_total = valorTotal;
 		this.cliente = cliente;
 		this.listaItemPedido = listaItemPedido;

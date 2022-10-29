@@ -2,6 +2,7 @@ package org.serratec.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +25,11 @@ public class ClienteDTO2 {
 	@ApiModelProperty(value="Cpf do cliente")
 	private String cpf;
 	
+	@Email
+	@NotBlank
+	@ApiModelProperty(value="Email do cliente")
+	private String email;
+	
 	@NotBlank
 	@ApiModelProperty(value="Telefone do cliente")
 	private String telefone;
@@ -43,9 +49,10 @@ public class ClienteDTO2 {
 		this.dataNascimento = cliente.getDataNascimento();
 		EnderecoDTO enderecoDTO = new EnderecoDTO(cliente.getEndereco());
 		this.endereco = enderecoDTO;
+		this.email = cliente.getEmail();
 	}
 
-	public ClienteDTO2(Long idCliente, String nomeCompleto, String cpf, String telefone, LocalDate dataNascimento,
+	public ClienteDTO2(Long idCliente, String nomeCompleto, String cpf, String telefone, LocalDate dataNascimento, String email,
 			EnderecoDTO endereco) {
 		super();
 		this.idCliente = idCliente;
@@ -54,6 +61,7 @@ public class ClienteDTO2 {
 		this.telefone = telefone;
 		this.dataNascimento = dataNascimento;
 		this.endereco = endereco;
+		this.email = email;
 	}
 
 	public ClienteDTO2() {

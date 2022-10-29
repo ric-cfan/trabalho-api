@@ -44,7 +44,7 @@ public class PedidoDTO2 {
 		this.dataPedido = dataPedido;
 		this.dataEntrega = dataEntrega;
 		this.dataEnvio = dataEnvio;
-		this.status = status;
+		this.status = status.toUpperCase();
 		this.idCliente = idCliente;
 		this.itens = itens;
 	}
@@ -53,7 +53,7 @@ public class PedidoDTO2 {
 		this.dataPedido = pedido.getDataPedido();
 		this.dataEntrega = pedido.getDataEntrega();
 		this.dataEnvio = pedido.getDataEnvio();
-		this.status = pedido.getStatus();
+		this.status = pedido.getStatus().toUpperCase();
 		this.idCliente = pedido.getCliente().getId();
 		List<ItemPedido> listaItemPedidos = new ArrayList<>(pedido.getListaItemPedido());
 		List<ItemPedidoDTO2> listaItemPedidosDTO2 = new ArrayList<>();

@@ -13,6 +13,7 @@ import org.serratec.dto.ItemPedidoDTO2;
 import org.serratec.dto.PedidoDTO;
 import org.serratec.dto.PedidoDTO2;
 import org.serratec.dto.RelatorioPedidoDTO;
+import org.serratec.exception.ClienteNotFoundException;
 import org.serratec.exception.DataPedidoAnteriorException;
 import org.serratec.exception.EmailException;
 import org.serratec.exception.EstoqueInsuficienteException;
@@ -85,8 +86,11 @@ public class PedidoService {
 		if (pedido.getDataPedido().isBefore(LocalDate.now())) {
 			throw new DataPedidoAnteriorException();
 		}
-		if(!pedido.getStatus().equals("P") || !pedido.getStatus().equals("F")) {
+		if(!pedido.getStatus().toUpperCase().equals("P") && !pedido.getStatus().toUpperCase().equals("F")) {
 			throw new StatusException("Status deverá ser 'P'(Pendente) ou 'F'(Finalizado).");
+		}
+		if(clienteRepository.findById(pedido.getIdCliente()).isEmpty()) {
+			throw new ClienteNotFoundException("Usuário inválido");
 		}
 		Cliente cliente = clienteRepository.findById(pedido.getIdCliente()).get();
 
