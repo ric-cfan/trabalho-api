@@ -12,6 +12,7 @@ import org.serratec.domain.UsuarioPerfil;
 import org.serratec.dto.UsuarioDTO;
 import org.serratec.dto.UsuarioInserirDTO;
 import org.serratec.exception.EmailException;
+import org.serratec.exception.NotFoundErroException;
 import org.serratec.exception.SenhaException;
 import org.serratec.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,10 @@ public class UsuarioService {
 
 	@Autowired
 	PerfilService perfilService;
-	
+
 	@Autowired
 	BCryptPasswordEncoder encoder;
-	
+
 	public List<UsuarioDTO> findAll() {
 		List<Usuario> usuarios = usuarioRepository.findAll();
 		List<UsuarioDTO> usuarioDTOs = new ArrayList<>();
@@ -40,11 +41,10 @@ public class UsuarioService {
 		return usuarioDTOs;
 	}
 
-	
-	public BCryptPasswordEncoder bCryptPasswordEncoder(){
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Transactional
 	public UsuarioDTO inserir(UsuarioInserirDTO user) throws EmailException {
 		if (!user.getSenha().equalsIgnoreCase(user.getConfirmaSenha())) {
@@ -66,6 +66,14 @@ public class UsuarioService {
 		usuario.setUsuarioPerfis(perfis);
 		usuario = usuarioRepository.save(usuario);
 		return new UsuarioDTO(usuario);
+	}
+
+	public UsuarioDTO findById(Long idUsuario) {
+		if (usuarioRepository.findById(idUsuario).isPresent()) {
+			UsuarioDTO usuarioDTO = new UsuarioDTO(usuarioRepository.findById(idUsuario).get());
+			return usuarioDTO;
+		}
+		throw new NotFoundErroException("Usuário não encontrado!");
 	}
 
 }

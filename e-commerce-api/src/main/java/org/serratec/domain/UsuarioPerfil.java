@@ -18,14 +18,14 @@ public class UsuarioPerfil {
 
 	@EmbeddedId
 	private UsuarioPerfilPK id = new UsuarioPerfilPK();
-	@ApiModelProperty(value="Data da criação")
+	@ApiModelProperty(value = "Data da criação")
 	@Column(name = "data_criacao")
 	private LocalDate dataCriacao;
 
 	public UsuarioPerfil() {
-		
+
 	}
-	
+
 	public UsuarioPerfil(Usuario usuario, Perfil perfil, LocalDate dataCriacao) {
 		super();
 		this.id.setUsuario(usuario);

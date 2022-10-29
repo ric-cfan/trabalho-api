@@ -3,9 +3,11 @@ package org.serratec.domain.pk;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 
 import org.serratec.domain.Perfil;
 import org.serratec.domain.Usuario;
@@ -14,11 +16,13 @@ import org.serratec.domain.Usuario;
 public class UsuarioPerfilPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
+	@MapsId("id")
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
+	@MapsId("id")
 	@JoinColumn(name = "id_perfil")
 	private Perfil perfil;
 
