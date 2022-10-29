@@ -48,9 +48,9 @@ public class UsuarioController {
 			@ApiResponse(code = 403, message = "Não há permissão para acessar o recurso"),
 			@ApiResponse(code = 505, message = "Exceção interna da aplicação"),
 	})
-	public ResponseEntity<UsuarioDTO> inserir(@RequestBody UsuarioInserirDTO usuario,Usuario idUsuario) {
+	public ResponseEntity<UsuarioDTO> inserir(@RequestBody UsuarioInserirDTO usuario) {
 		UsuarioDTO usuarioCadastro = usuarioService.inserir(usuario);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUsuario.getId())
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuarioCadastro.getId())
 				.toUri();
 		return ResponseEntity.created(uri).body(usuarioCadastro);
 	}
